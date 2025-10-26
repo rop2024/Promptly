@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import authService from './services/authService.js';
 import entryService from './services/entryService.js';
+import promptService from './services/promptService.js';
 import EntryForm from './components/Journal/EntryForm.jsx';
 import EntryList from './components/Journal/EntryList.jsx';
+import DailyPrompt from './components/Prompts/DailyPrompt.jsx';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -32,6 +34,10 @@ function App() {
   const [message, setMessage] = useState('');
   const [filters, setFilters] = useState({ page: 1, limit: 10, search: '', mood: '', tag: '' });
 
+  // Prompt states
+  const [promptStats, setPromptStats] = useState(null);
+  const [showPromptSection, setShowPromptSection] = useState(true);
+
   // On mount: check auth, test API connection, load users
   useEffect(() => {
     const user = authService.getCurrentUser?.();
@@ -40,6 +46,7 @@ function App() {
       // load journal data for authenticated user
       loadEntries();
       loadStats();
+      loadPromptStats();
     }
 
     const testConnection = async () => {
@@ -97,6 +104,35 @@ function App() {
     } catch (error) {
       console.error('Error loading stats:', error);
     }
+  };
+
+  // Prompt functions
+  const loadPromptStats = async () => {
+    try {
+      const result = await promptService.getPromptStats();
+      setPromptStats(result.data);
+    } catch (error) {
+      console.error('Error loading prompt stats:', error);
+    }
+  };
+
+  const handlePromptCompleted = async (response) => {
+    // Create a journal entry from the prompt response
+    if (response.trim()) {
+      try {
+        await entryService.createEntry({
+          title: 'Daily Prompt Response',
+          content: response,
+          mood: 'neutral',
+          tags: ['daily-prompt']
+        });
+        setMessage('Prompt completed and entry saved!');
+        loadEntries(); // Refresh entries list
+      } catch (error) {
+        console.error('Error creating entry from prompt:', error);
+      }
+    }
+    loadPromptStats(); // Refresh prompt stats
   };
 
   // Add a new user (public endpoint in original app)
@@ -312,6 +348,45 @@ function App() {
           ) : (
             // Journal Interface
             <div>
+              {/* Daily Prompt Section */}
+              {currentUser && showPromptSection && (
+                <div className="mb-8">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-2xl font-bold text-gray-800">Daily Prompt</h2>
+                    <button
+                      onClick={() => setShowPromptSection(false)}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <DailyPrompt 
+                    onPromptCompleted={handlePromptCompleted}
+                    compact={false}
+                  />
+                  
+                  {/* Prompt Stats */}
+                  {promptStats && (
+                    <div className="mt-4 grid grid-cols-3 gap-4 text-center">
+                      <div className="bg-white p-3 rounded-lg shadow">
+                        <div className="text-2xl font-bold text-blue-600">{promptStats.streak}</div>
+                        <div className="text-sm text-gray-600">Current Streak</div>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg shadow">
+                        <div className="text-2xl font-bold text-green-600">{promptStats.totalCompleted}</div>
+                        <div className="text-sm text-gray-600">Total Completed</div>
+                      </div>
+                      <div className="bg-white p-3 rounded-lg shadow">
+                        <div className="text-2xl font-bold text-purple-600">
+                          {promptStats.completedToday ? '✅' : '❌'}
+                        </div>
+                        <div className="text-sm text-gray-600">Today</div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Top bar with welcome and actions */}
               <div className="bg-white rounded-lg shadow-md p-6 mb-4">
                 <div className="flex items-center justify-between">

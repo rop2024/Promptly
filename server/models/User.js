@@ -29,6 +29,30 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['user', 'admin'],
     default: 'user'
+  },
+  // Prompt tracking fields
+  lastPromptDate: {
+    type: String,
+    default: null
+  },
+  promptStreak: {
+    type: Number,
+    default: 0
+  },
+  totalPromptsCompleted: {
+    type: Number,
+    default: 0
+  },
+  // User preferences
+  preferences: {
+    promptCategories: {
+      type: [String],
+      default: ['reflection', 'creativity', 'gratitude', 'goals', 'mindfulness']
+    },
+    promptTime: {
+      type: String,
+      default: 'morning'
+    }
   }
 }, {
   timestamps: true
