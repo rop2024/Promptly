@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import authService from './services/authService.js';
+import entryService from './services/entryService.js';
+import EntryForm from './components/Journal/EntryForm.jsx';
+import EntryList from './components/Journal/EntryList.jsx';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -20,11 +23,23 @@ function App() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
+  // Journal states
+  const [entries, setEntries] = useState([]);
+  const [showEntryForm, setShowEntryForm] = useState(false);
+  const [editingEntry, setEditingEntry] = useState(null);
+  const [viewingEntry, setViewingEntry] = useState(null);
+  const [stats, setStats] = useState(null);
+  const [message, setMessage] = useState('');
+  const [filters, setFilters] = useState({ page: 1, limit: 10, search: '', mood: '', tag: '' });
+
   // On mount: check auth, test API connection, load users
   useEffect(() => {
     const user = authService.getCurrentUser?.();
     if (user) {
       setCurrentUser(user);
+      // load journal data for authenticated user
+      loadEntries();
+      loadStats();
     }
 
     const testConnection = async () => {
@@ -42,6 +57,14 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Reload entries when filters change or when currentUser changes
+  useEffect(() => {
+    if (currentUser) {
+      loadEntries();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters, currentUser]);
+
   // Load users from API
   const loadUsers = async () => {
     try {
@@ -49,6 +72,30 @@ function App() {
       setUsers(response.data);
     } catch (error) {
       console.error('Error loading users:', error);
+    }
+  };
+
+  // Journal data functions
+  const loadEntries = async () => {
+    try {
+      setLoading(true);
+      const result = await entryService.getEntries(filters);
+      // entryService returns full axios response
+      setEntries(result.data);
+    } catch (error) {
+      setMessage('Failed to load entries');
+      console.error('Error loading entries:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadStats = async () => {
+    try {
+      const result = await entryService.getStats();
+      setStats(result.data);
+    } catch (error) {
+      console.error('Error loading stats:', error);
     }
   };
 
@@ -63,6 +110,59 @@ function App() {
     } catch (error) {
       console.error('Error creating user:', error);
     }
+  };
+
+  const handleCreateEntry = async (entryData) => {
+    try {
+      setLoading(true);
+      await entryService.createEntry(entryData);
+      setMessage('Entry created successfully!');
+      setShowEntryForm(false);
+      loadEntries();
+      loadStats();
+    } catch (error) {
+      setMessage('Failed to create entry');
+      console.error('Error creating entry:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateEntry = async (entryData) => {
+    try {
+      setLoading(true);
+      await entryService.updateEntry(editingEntry.id, entryData);
+      setMessage('Entry updated successfully!');
+      setEditingEntry(null);
+      loadEntries();
+      loadStats();
+    } catch (error) {
+      setMessage('Failed to update entry');
+      console.error('Error updating entry:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteEntry = async (entry) => {
+    if (window.confirm('Are you sure you want to delete this entry?')) {
+      try {
+        setLoading(true);
+        await entryService.deleteEntry(entry.id);
+        setMessage('Entry deleted successfully!');
+        loadEntries();
+        loadStats();
+      } catch (error) {
+        setMessage('Failed to delete entry');
+        console.error('Error deleting entry:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  const handleFilterChange = (newFilters) => {
+    setFilters(prev => ({ ...prev, ...newFilters, page: 1 }));
   };
 
   // Auth handlers (from provided auth code)
@@ -210,42 +310,149 @@ function App() {
               </div>
             </div>
           ) : (
-            <div className="bg-white rounded-lg shadow-md p-6 mb-4 max-w-md mx-auto">
-              <h2 className="text-2xl font-semibold mb-4 text-center">Welcome, {currentUser.name}!</h2>
-
-              {authMessage && (
-                <div className={`mb-4 p-3 rounded ${authMessage.toLowerCase().includes('success') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                  {authMessage}
+            // Journal Interface
+            <div>
+              {/* Top bar with welcome and actions */}
+              <div className="bg-white rounded-lg shadow-md p-6 mb-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-semibold">Welcome, {currentUser.name}!</h2>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setShowEntryForm(true)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                    >
+                      New Entry
+                    </button>
+                    <button
+                      onClick={handleLogout}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      Logout
+                    </button>
+                  </div>
                 </div>
-              )}
 
-              <div className="space-y-3 mb-6">
-                <p><strong>Email:</strong> {currentUser.email}</p>
-                <p><strong>Role:</strong> {currentUser.role}</p>
-                <p><strong>ID:</strong> {currentUser.id}</p>
+                {message && (
+                  <div className={`mt-4 p-3 rounded ${message.toLowerCase().includes('success') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                    {message}
+                  </div>
+                )}
               </div>
 
-              <div className="space-y-3">
-                <button
-                  onClick={handleLogout}
-                  className="w-full bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200"
-                >
-                  Logout
-                </button>
+              {/* Journal content */}
+              <div className="px-4 py-6 sm:px-0">
+                {/* Stats Overview */}
+                {stats && (
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div className="bg-white p-4 rounded-lg shadow">
+                      <div className="text-2xl font-bold text-blue-600">{stats.totalEntries}</div>
+                      <div className="text-gray-500">Total Entries</div>
+                    </div>
+                    <div className="bg-white p-4 rounded-lg shadow">
+                      <div className="text-2xl font-bold text-green-600">{(stats?.moodStats?.[0]?.count) || 0}</div>
+                      <div className="text-gray-500">{stats?.moodStats?.[0]?._id || 'No'} Mood</div>
+                    </div>
+                    <div className="bg-white p-4 rounded-lg shadow">
+                      <div className="text-2xl font-bold text-purple-600">{stats?.recentActivity?.length || 0}</div>
+                      <div className="text-gray-500">Recent Activity</div>
+                    </div>
+                    <div className="bg-white p-4 rounded-lg shadow">
+                      <div className="text-2xl font-bold text-orange-600">{(stats?.monthlyStats || []).reduce((sum, month) => sum + (month.count || 0), 0)}</div>
+                      <div className="text-gray-500">Last 6 Months</div>
+                    </div>
+                  </div>
+                )}
 
-                <button
-                  onClick={async () => {
-                    try {
-                      const result = await authService.getProtectedData();
-                      setAuthMessage('Protected data loaded: ' + JSON.stringify(result.data));
-                    } catch (error) {
-                      setAuthMessage('Failed to load protected data');
-                    }
-                  }}
-                  className="w-full bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200"
-                >
-                  Test Protected Route
-                </button>
+                {/* Filters */}
+                <div className="bg-white p-4 rounded-lg shadow mb-6">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <input
+                      type="text"
+                      placeholder="Search entries..."
+                      value={filters.search}
+                      onChange={(e) => handleFilterChange({ search: e.target.value })}
+                      className="p-2 border rounded"
+                    />
+                    <select
+                      value={filters.mood}
+                      onChange={(e) => handleFilterChange({ mood: e.target.value })}
+                      className="p-2 border rounded"
+                    >
+                      <option value="">All Moods</option>
+                      <option value="happy">😊 Happy</option>
+                      <option value="sad">😢 Sad</option>
+                      <option value="excited">🎉 Excited</option>
+                      <option value="peaceful">☮️ Peaceful</option>
+                      <option value="neutral">😐 Neutral</option>
+                    </select>
+                    <input
+                      type="text"
+                      placeholder="Filter by tag..."
+                      value={filters.tag}
+                      onChange={(e) => handleFilterChange({ tag: e.target.value })}
+                      className="p-2 border rounded"
+                    />
+                    <button
+                      onClick={() => handleFilterChange({ search: '', mood: '', tag: '' })}
+                      className="p-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                    >
+                      Clear Filters
+                    </button>
+                  </div>
+                </div>
+
+                {/* Entry Form Modal */}
+                {(showEntryForm || editingEntry) && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                      <EntryForm
+                        entry={editingEntry}
+                        onSubmit={editingEntry ? handleUpdateEntry : handleCreateEntry}
+                        onCancel={() => { setShowEntryForm(false); setEditingEntry(null); }}
+                        isLoading={loading}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* View Entry Modal */}
+                {viewingEntry && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                      <div className="p-6">
+                        <div className="flex justify-between items-start mb-4">
+                          <h2 className="text-2xl font-bold">{viewingEntry.title}</h2>
+                          <button onClick={() => setViewingEntry(null)} className="text-gray-500 hover:text-gray-700">✕</button>
+                        </div>
+                        <div className="prose max-w-none mb-4">
+                          <pre className="whitespace-pre-wrap font-sans">{viewingEntry.content}</pre>
+                        </div>
+                        <div className="border-t pt-4">
+                          <button onClick={() => { setEditingEntry(viewingEntry); setViewingEntry(null); }} className="bg-blue-500 text-white px-4 py-2 rounded mr-2">Edit</button>
+                          <button onClick={() => setViewingEntry(null)} className="bg-gray-500 text-white px-4 py-2 rounded">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Entries List */}
+                <EntryList
+                  entries={entries.data || entries}
+                  onEdit={setEditingEntry}
+                  onDelete={handleDeleteEntry}
+                  onView={setViewingEntry}
+                  isLoading={loading}
+                />
+
+                {/* Pagination */}
+                {entries.pagination && entries.pagination.totalPages > 1 && (
+                  <div className="flex justify-center mt-6 space-x-2">
+                    <button onClick={() => handleFilterChange({ page: filters.page - 1 })} disabled={!entries.pagination.hasPrevPage} className="px-4 py-2 border rounded disabled:opacity-50">Previous</button>
+                    <span className="px-4 py-2">Page {entries.pagination.page} of {entries.pagination.totalPages}</span>
+                    <button onClick={() => handleFilterChange({ page: filters.page + 1 })} disabled={!entries.pagination.hasNextPage} className="px-4 py-2 border rounded disabled:opacity-50">Next</button>
+                  </div>
+                )}
               </div>
             </div>
           )}
