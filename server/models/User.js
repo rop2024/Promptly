@@ -30,9 +30,9 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user'
   },
-  // Prompt tracking fields
+  // Prompt-related fields
   lastPromptDate: {
-    type: String,
+    type: String, // YYYY-MM-DD format
     default: null
   },
   promptStreak: {
@@ -40,6 +40,23 @@ const userSchema = new mongoose.Schema({
     default: 0
   },
   totalPromptsCompleted: {
+    type: Number,
+    default: 0
+  },
+  // Writing streak fields
+  writingStreak: {
+    type: Number,
+    default: 0
+  },
+  lastWritingDate: {
+    type: String, // YYYY-MM-DD format
+    default: null
+  },
+  longestWritingStreak: {
+    type: Number,
+    default: 0
+  },
+  totalEntriesWritten: {
     type: Number,
     default: 0
   },
@@ -52,8 +69,17 @@ const userSchema = new mongoose.Schema({
     promptTime: {
       type: String,
       default: 'morning'
+    },
+    timezone: {
+      type: String,
+      default: 'UTC'
     }
-  }
+  },
+  streakHistory: [{
+    date: String, // YYYY-MM-DD
+    streak: Number,
+    entryCount: Number
+  }]
 }, {
   timestamps: true
 });
@@ -81,6 +107,118 @@ userSchema.methods.getSignedJwtToken = function() {
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRE }
   );
+};
+
+// Method to update writing streak
+userSchema.methods.updateWritingStreak = function(entryDate = null) {
+  const today = this.getCurrentDateString();
+  const entryDateStr = entryDate || today;
+  
+  // Don't allow future dates
+  if (entryDateStr > today) {
+    return this.writingStreak;
+  }
+
+  // If no last writing date, start streak at 1
+  if (!this.lastWritingDate) {
+    this.writingStreak = 1;
+    this.lastWritingDate = entryDateStr;
+    this.totalEntriesWritten += 1;
+    this.updateLongestStreak();
+    return this.writingStreak;
+  }
+
+  const lastDate = new Date(this.lastWritingDate);
+  const currentDate = new Date(entryDateStr);
+  const diffTime = currentDate - lastDate;
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) {
+    // Same day - don't change streak, but update last writing date if newer
+    if (entryDateStr > this.lastWritingDate) {
+      this.lastWritingDate = entryDateStr;
+    }
+    this.totalEntriesWritten += 1;
+  } else if (diffDays === 1) {
+    // Consecutive day - increment streak
+    this.writingStreak += 1;
+    this.lastWritingDate = entryDateStr;
+    this.totalEntriesWritten += 1;
+    this.updateLongestStreak();
+  } else if (diffDays > 1) {
+    // Broken streak - reset to 1
+    this.writingStreak = 1;
+    this.lastWritingDate = entryDateStr;
+    this.totalEntriesWritten += 1;
+    this.updateLongestStreak();
+  }
+  // If diffDays < 0, it's a past date that we've already recorded
+
+  return this.writingStreak;
+};
+
+// Method to update longest streak record
+userSchema.methods.updateLongestStreak = function() {
+  if (this.writingStreak > this.longestWritingStreak) {
+    this.longestWritingStreak = this.writingStreak;
+  }
+};
+
+// Method to get current date in YYYY-MM-DD format
+userSchema.methods.getCurrentDateString = function() {
+  return new Date().toISOString().split('T')[0];
+};
+
+// Static method to recalculate streak for a user (for data integrity)
+userSchema.statics.recalculateStreak = async function(userId) {
+  const Entry = mongoose.model('Entry');
+  
+  // Get all unique dates the user has written entries (sorted)
+  const writingDates = await Entry.aggregate([
+    { $match: { user: mongoose.Types.ObjectId(userId) } },
+    {
+      $project: {
+        date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }
+      }
+    },
+    { $group: { _id: "$date" } },
+    { $sort: { _id: 1 } }
+  ]);
+
+  const dateStrings = writingDates.map(d => d._id);
+  
+  if (dateStrings.length === 0) {
+    return 0;
+  }
+
+  // Calculate streak by checking consecutive dates
+  let currentStreak = 1;
+  let maxStreak = 1;
+
+  for (let i = 1; i < dateStrings.length; i++) {
+    const prevDate = new Date(dateStrings[i - 1]);
+    const currDate = new Date(dateStrings[i]);
+    const diffTime = currDate - prevDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 1) {
+      currentStreak++;
+      maxStreak = Math.max(maxStreak, currentStreak);
+    } else if (diffDays > 1) {
+      currentStreak = 1;
+    }
+    // If diffDays === 0, same day - don't change streak
+  }
+
+  // Update user with calculated streak
+  await this.findByIdAndUpdate(userId, {
+    writingStreak: currentStreak,
+    longestWritingStreak: maxStreak,
+    lastWritingDate: dateStrings[dateStrings.length - 1],
+    totalEntriesWritten: writingDates.length
+  });
+
+  return currentStreak;
 };
 
 export default mongoose.model('User', userSchema);

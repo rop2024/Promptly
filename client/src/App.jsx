@@ -3,9 +3,11 @@ import axios from 'axios';
 import authService from './services/authService.js';
 import entryService from './services/entryService.js';
 import promptService from './services/promptService.js';
+import streakService from './services/streakService.js';
 import EntryForm from './components/Journal/EntryForm.jsx';
 import EntryList from './components/Journal/EntryList.jsx';
 import DailyPrompt from './components/Prompts/DailyPrompt.jsx';
+import StreakDisplay from './components/Streak/StreakDisplay.jsx';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -37,6 +39,9 @@ function App() {
   // Prompt states
   const [promptStats, setPromptStats] = useState(null);
   const [showPromptSection, setShowPromptSection] = useState(true);
+
+  // Streak states
+  const [streakData, setStreakData] = useState(null);
 
   // On mount: check auth, test API connection, load users
   useEffect(() => {
@@ -71,6 +76,14 @@ function App() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, currentUser]);
+
+  // Load streak data when entries change
+  useEffect(() => {
+    if (currentUser && entries.length > 0) {
+      loadStreakData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser, entries]);
 
   // Load users from API
   const loadUsers = async () => {
@@ -133,6 +146,20 @@ function App() {
       }
     }
     loadPromptStats(); // Refresh prompt stats
+  };
+
+  // Streak functions
+  const loadStreakData = async () => {
+    try {
+      const result = await streakService.getStreak();
+      setStreakData(result.data);
+    } catch (error) {
+      console.error('Error loading streak data:', error);
+    }
+  };
+
+  const handleStreakUpdate = (newStreakData) => {
+    setStreakData(newStreakData);
   };
 
   // Add a new user (public endpoint in original app)
@@ -384,6 +411,13 @@ function App() {
                       </div>
                     </div>
                   )}
+                </div>
+              )}
+
+              {/* Writing Streak Section */}
+              {currentUser && (
+                <div className="mb-8">
+                  <StreakDisplay onStreakUpdate={handleStreakUpdate} />
                 </div>
               )}
 

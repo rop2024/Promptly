@@ -34,6 +34,11 @@ const entrySchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User',
     required: true
+  },
+  // Add field to track if this entry should count for streak
+  countsForStreak: {
+    type: Boolean,
+    default: true
   }
 }, {
   timestamps: true // This adds createdAt and updatedAt automatically
@@ -42,6 +47,38 @@ const entrySchema = new mongoose.Schema({
 // Index for better query performance
 entrySchema.index({ user: 1, createdAt: -1 });
 entrySchema.index({ tags: 1 });
+entrySchema.index({ user: 1, countsForStreak: 1 });
+
+// Update user's writing streak when a new entry is created
+entrySchema.post('save', async function() {
+  if (this.countsForStreak) {
+    try {
+      const User = mongoose.model('User');
+      const user = await User.findById(this.user);
+      
+      if (user) {
+        const entryDate = this.createdAt.toISOString().split('T')[0];
+        user.updateWritingStreak(entryDate);
+        await user.save();
+      }
+    } catch (error) {
+      console.error('Error updating writing streak:', error);
+    }
+  }
+});
+
+// Update user's writing streak when an entry is deleted
+entrySchema.post('findOneAndDelete', async function(doc) {
+  if (doc && doc.countsForStreak) {
+    try {
+      // Recalculate streak for user since an entry was removed
+      const User = mongoose.model('User');
+      await User.recalculateStreak(doc.user);
+    } catch (error) {
+      console.error('Error recalculating streak after deletion:', error);
+    }
+  }
+});
 
 // Static method to get total entries count for a user
 entrySchema.statics.getTotalEntries = async function(userId) {
