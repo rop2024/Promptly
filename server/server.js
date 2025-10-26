@@ -8,6 +8,8 @@ import errorHandler from './middleware/error.js';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
 import apiRoutes from './routes/api.js';
+import entryRoutes from './routes/entries.js';
+import promptRoutes from './routes/prompts.js';
 
 // Load env vars
 dotenv.config();
@@ -33,6 +35,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes);
 // Mount public API routes first so they are reachable (e.g. /api/users public endpoints)
 app.use('/api', apiRoutes);
+// Add entries route (mounted after public api routes)
+app.use('/api/entries', entryRoutes);
+// Add prompts route
+app.use('/api/prompts', promptRoutes);
 // Mount admin-protected user routes after public API routes
 app.use('/api/users', userRoutes);
 
