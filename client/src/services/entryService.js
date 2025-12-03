@@ -1,23 +1,4 @@
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_BASE_URL;
-
-// Create axios instance with auth
-const api = axios.create({
-  baseURL: API_URL,
-});
-
-// Add token to requests (use same storage key as authService)
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('promptly_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+import api from './api.js';
 
 // Entry service
 const entryService = {
