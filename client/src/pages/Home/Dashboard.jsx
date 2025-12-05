@@ -24,19 +24,19 @@ const Dashboard = ({ currentUser }) => {
       
       // Load recent entries
       const entriesResult = await entryService.getEntries({ limit: 5 });
-      setRecentEntries(entriesResult.data);
+      setRecentEntries(entriesResult.data?.data || []); // data.data is the array
 
       // Load streak data
       const streakResult = await streakService.getStreak();
-      setStreakData(streakResult.data);
+      setStreakData(streakResult.data?.data || null);
 
       // Load prompt data
       const promptResult = await promptService.getTodaysPrompt();
-      setPromptData(promptResult.data);
+      setPromptData(promptResult.data?.data || null);
 
       // Load stats
       const statsResult = await entryService.getStats();
-      setStats(statsResult.data);
+      setStats(statsResult.data?.data || null);
 
     } catch (error) {
       console.error('Error loading dashboard data:', error);

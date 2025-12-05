@@ -50,8 +50,9 @@ const Register = () => {
       const result = await authService.register(registerData);
       setMessage('Registration successful! Redirecting...');
       
+      // Force a full page reload to update app state
       setTimeout(() => {
-        navigate('/');
+        window.location.href = '/';
       }, 1000);
     } catch (error) {
       setMessage(

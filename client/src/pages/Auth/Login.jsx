@@ -37,8 +37,9 @@ const Login = () => {
       const result = await authService.login(formData);
       setMessage('Login successful! Redirecting...');
       
+      // Force a full page reload to update app state
       setTimeout(() => {
-        navigate(from, { replace: true });
+        window.location.href = from;
       }, 1000);
     } catch (error) {
       setMessage(

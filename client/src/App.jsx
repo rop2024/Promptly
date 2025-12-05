@@ -32,6 +32,29 @@ function App() {
     setLoading(false);
   }, []);
 
+  // Listen for storage changes (for cross-tab sync)
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const user = authService.getCurrentUser();
+      setCurrentUser(user);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Also check periodically in case storage event doesn't fire
+    const interval = setInterval(() => {
+      const user = authService.getCurrentUser();
+      if (JSON.stringify(user) !== JSON.stringify(currentUser)) {
+        setCurrentUser(user);
+      }
+    }, 500);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, [currentUser]);
+
   const handleLogout = () => {
     authService.logout();
     setCurrentUser(null);

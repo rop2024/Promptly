@@ -54,16 +54,6 @@ const Navbar = ({ currentUser, onLogout }) => {
               >
                 📝 Entries
               </Link>
-              <Link
-                to="/settings"
-                className={`px-3 py-2 rounded-md text-sm font-medium transition duration-200 ${
-                  isActive('/settings') 
-                    ? 'text-blue-600 bg-blue-50' 
-                    : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
-                }`}
-              >
-                ⚙️ Settings
-              </Link>
             </div>
           )}
 
@@ -174,17 +164,6 @@ const Navbar = ({ currentUser, onLogout }) => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 📝 Entries
-              </Link>
-              <Link
-                to="/settings"
-                className={`px-3 py-2 rounded-md text-base font-medium ${
-                  isActive('/settings') 
-                    ? 'text-blue-600 bg-blue-50' 
-                    : 'text-gray-600 hover:text-blue-600 hover:bg-gray-50'
-                }`}
-                onClick={() => setIsMenuOpen(false)}
-              >
-                ⚙️ Settings
               </Link>
             </div>
           </div>
