@@ -237,6 +237,27 @@ router.get('/stats/overview', async (req, res, next) => {
   try {
     const totalEntries = await Entry.countDocuments({ user: req.user.id });
     
+    // Get all entries for word count and prompt stats
+    const allEntries = await Entry.find({ user: req.user.id }).select('title content');
+    
+    // Calculate total words
+    let totalWords = 0;
+    const promptsWritten = [];
+    
+    allEntries.forEach(entry => {
+      // Count words in content
+      const words = entry.content.trim().split(/\s+/).filter(word => word.length > 0);
+      totalWords += words.length;
+      
+      // Track prompts (using title as prompt identifier)
+      if (entry.title && !promptsWritten.includes(entry.title)) {
+        promptsWritten.push(entry.title);
+      }
+    });
+    
+    // Calculate average words per entry
+    const averageWords = totalEntries > 0 ? Math.round(totalWords / totalEntries) : 0;
+    
     // Entries per month (last 6 months)
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
@@ -270,6 +291,9 @@ router.get('/stats/overview', async (req, res, next) => {
       success: true,
       data: {
         totalEntries,
+        totalWords,
+        averageWords,
+        uniquePrompts: promptsWritten.length,
         monthlyStats,
         recentActivity: recentEntries
       }

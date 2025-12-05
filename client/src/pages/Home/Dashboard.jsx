@@ -100,28 +100,24 @@ const Dashboard = ({ currentUser }) => {
           <h2 className="text-2xl font-bold mb-4 text-center">✨ About Promptly ✨</h2>
           <ul className="space-y-2 text-white/95 text-base">
             <li className="flex items-start">
+              <span className="mr-3 text-xl">✍️</span>
+              <span>Helps you build a consistent writing habit.</span>
+            </li>
+            <li className="flex items-start">
               <span className="mr-3 text-xl">📝</span>
-              <span><strong>Promptly</strong> gives you one daily writing prompt to respond to.</span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-3 text-xl">⏱️</span>
-              <span>Write focused responses of 30-100 words in timed sessions.</span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-3 text-xl">💡</span>
-              <span>Get AI-powered writing assistance when you're stuck or need inspiration.</span>
+              <span>Lets you track daily thoughts and respond to prompts.</span>
             </li>
             <li className="flex items-start">
               <span className="mr-3 text-xl">🔥</span>
-              <span>Build and maintain daily writing streaks to develop consistency.</span>
+              <span>Maintains writing streaks to reinforce continuity.</span>
             </li>
             <li className="flex items-start">
-              <span className="mr-3 text-xl">🎯</span>
-              <span>Practice focused, prompt-based writing to improve your skills.</span>
+              <span className="mr-3 text-xl">🌱</span>
+              <span>Supports mindfulness, creativity, and personal growth.</span>
             </li>
             <li className="flex items-start">
-              <span className="mr-3 text-xl">📊</span>
-              <span>Track your writing progress with stats and streak insights.</span>
+              <span className="mr-3 text-xl">💡</span>
+              <span>Provides daily prompts and streak tracking.</span>
             </li>
           </ul>
         </div>
@@ -159,19 +155,39 @@ const Dashboard = ({ currentUser }) => {
         
         <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-green-500">
           <div className="text-2xl font-bold text-gray-800">{streakData?.currentStreak || 0}</div>
-          <div className="text-gray-600 text-sm">Current Streak</div>
+          <div className="text-gray-600 text-sm">Current Streak 🔥</div>
         </div>
         
         <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-purple-500">
-          <div className="text-2xl font-bold text-gray-800">{streakData?.longestStreak || 0}</div>
-          <div className="text-gray-600 text-sm">Longest Streak</div>
+          <div className="text-2xl font-bold text-gray-800">{stats?.uniquePrompts || 0}</div>
+          <div className="text-gray-600 text-sm">Unique Prompts</div>
         </div>
         
         <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-orange-500">
           <div className="text-2xl font-bold text-gray-800">
-            {promptData?.totalCompleted || 0}
+            {stats?.totalWords ? stats.totalWords.toLocaleString() : 0}
           </div>
-          <div className="text-gray-600 text-sm">Prompts Completed</div>
+          <div className="text-gray-600 text-sm">Total Words Written</div>
+        </div>
+      </div>
+
+      {/* Additional Stats Row */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-teal-500">
+          <div className="text-2xl font-bold text-gray-800">{stats?.averageWords || 0}</div>
+          <div className="text-gray-600 text-sm">Avg Words Per Entry</div>
+        </div>
+        
+        <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-indigo-500">
+          <div className="text-2xl font-bold text-gray-800">{streakData?.longestStreak || 0}</div>
+          <div className="text-gray-600 text-sm">Longest Streak</div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-pink-500">
+          <div className="text-2xl font-bold text-gray-800">
+            {stats?.totalEntries > 0 ? Math.round((stats?.uniquePrompts / stats?.totalEntries) * 100) : 0}%
+          </div>
+          <div className="text-gray-600 text-sm">Prompt Variety</div>
         </div>
       </div>
 
