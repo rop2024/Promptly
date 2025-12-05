@@ -10,7 +10,6 @@ const EntriesPage = () => {
     page: 1,
     limit: 10,
     search: '',
-    mood: '',
     tag: ''
   });
   const [pagination, setPagination] = useState(null);
@@ -71,7 +70,7 @@ const EntriesPage = () => {
 
       {/* Filters */}
       <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
             <input
@@ -81,27 +80,6 @@ const EntriesPage = () => {
               onChange={(e) => handleFilterChange({ search: e.target.value })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
             />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Mood</label>
-            <select
-              value={filters.mood}
-              onChange={(e) => handleFilterChange({ mood: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-            >
-              <option value="">All Moods</option>
-              <option value="happy">😊 Happy</option>
-              <option value="sad">😢 Sad</option>
-              <option value="excited">🎉 Excited</option>
-              <option value="peaceful">☮️ Peaceful</option>
-              <option value="neutral">😐 Neutral</option>
-              <option value="anxious">😰 Anxious</option>
-              <option value="grateful">🙏 Grateful</option>
-              <option value="tired">😴 Tired</option>
-              <option value="motivated">💪 Motivated</option>
-              <option value="angry">😠 Angry</option>
-            </select>
           </div>
           
           <div>
@@ -118,7 +96,7 @@ const EntriesPage = () => {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Actions</label>
             <button
-              onClick={() => handleFilterChange({ search: '', mood: '', tag: '' })}
+              onClick={() => handleFilterChange({ search: '', tag: '' })}
               className="w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-200"
             >
               Clear Filters
@@ -143,7 +121,7 @@ const EntriesPage = () => {
           <div className="text-6xl mb-4">📝</div>
           <h3 className="text-xl font-semibold text-gray-700 mb-2">No entries found</h3>
           <p className="text-gray-500 mb-6">
-            {filters.search || filters.mood || filters.tag 
+            {filters.search || filters.tag 
               ? "Try adjusting your filters to see more entries."
               : "Start writing your first journal entry!"
             }

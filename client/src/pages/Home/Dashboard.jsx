@@ -94,6 +94,39 @@ const Dashboard = ({ currentUser }) => {
 
   return (
     <div className="space-y-6">
+      {/* Application Objective Banner */}
+      <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl shadow-lg text-white p-6">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold mb-4 text-center">✨ About Promptly ✨</h2>
+          <ul className="space-y-2 text-white/95 text-base">
+            <li className="flex items-start">
+              <span className="mr-3 text-xl">📝</span>
+              <span><strong>Promptly</strong> gives you one daily writing prompt to respond to.</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-3 text-xl">⏱️</span>
+              <span>Write focused responses of 30-100 words in timed sessions.</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-3 text-xl">💡</span>
+              <span>Get AI-powered writing assistance when you're stuck or need inspiration.</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-3 text-xl">🔥</span>
+              <span>Build and maintain daily writing streaks to develop consistency.</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-3 text-xl">🎯</span>
+              <span>Practice focused, prompt-based writing to improve your skills.</span>
+            </li>
+            <li className="flex items-start">
+              <span className="mr-3 text-xl">📊</span>
+              <span>Track your writing progress with stats and streak insights.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
       {/* Welcome Header */}
       <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-lg text-white p-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
@@ -103,8 +136,8 @@ const Dashboard = ({ currentUser }) => {
             </h1>
             <p className="text-blue-100 text-lg">
               {streakData?.writtenToday 
-                ? "Great job writing today! Keep building your streak. 🔥"
-                : "Ready to write today's entry?"
+                ? "Great job completing today's prompt! Keep your streak alive. 🔥"
+                : "Ready for today's writing prompt?"
               }
             </p>
           </div>
@@ -112,7 +145,7 @@ const Dashboard = ({ currentUser }) => {
             to="/entries/new"
             className="mt-4 md:mt-0 bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition duration-200 shadow-lg"
           >
-            + New Entry
+            + Start Writing
           </Link>
         </div>
       </div>
@@ -130,10 +163,8 @@ const Dashboard = ({ currentUser }) => {
         </div>
         
         <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-purple-500">
-          <div className="text-2xl font-bold text-gray-800">{stats?.moodStats?.[0]?.count || 0}</div>
-          <div className="text-gray-600 text-sm">
-            {stats?.moodStats?.[0]?._id ? `${stats.moodStats[0]._id} Entries` : 'Most Common Mood'}
-          </div>
+          <div className="text-2xl font-bold text-gray-800">{streakData?.longestStreak || 0}</div>
+          <div className="text-gray-600 text-sm">Longest Streak</div>
         </div>
         
         <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-orange-500">

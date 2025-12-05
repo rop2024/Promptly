@@ -2,32 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import entryService from '../../services/entryService.js';
 
-const MOOD_EMOJIS = {
-  happy: '😊',
-  sad: '😢',
-  excited: '🎉',
-  angry: '😠',
-  peaceful: '☮️',
-  anxious: '😰',
-  grateful: '🙏',
-  tired: '😴',
-  motivated: '💪',
-  neutral: '😐'
-};
-
-const MOOD_COLORS = {
-  happy: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  sad: 'bg-blue-100 text-blue-800 border-blue-200',
-  excited: 'bg-orange-100 text-orange-800 border-orange-200',
-  angry: 'bg-red-100 text-red-800 border-red-200',
-  peaceful: 'bg-green-100 text-green-800 border-green-200',
-  anxious: 'bg-purple-100 text-purple-800 border-purple-200',
-  grateful: 'bg-teal-100 text-teal-800 border-teal-200',
-  tired: 'bg-indigo-100 text-indigo-800 border-indigo-200',
-  motivated: 'bg-pink-100 text-pink-800 border-pink-200',
-  neutral: 'bg-gray-100 text-gray-800 border-gray-200'
-};
-
 const EntryDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -141,11 +115,6 @@ const EntryDetail = () => {
             <h1 className="text-3xl font-bold text-gray-800 mb-3">{entry.title}</h1>
             
             <div className="flex flex-wrap items-center gap-3 mb-4">
-              <div className={`flex items-center space-x-2 px-3 py-1.5 rounded-full border ${MOOD_COLORS[entry.mood]}`}>
-                <span className="text-lg">{MOOD_EMOJIS[entry.mood]}</span>
-                <span className="font-medium capitalize">{entry.mood}</span>
-              </div>
-              
               {entry.isPublic && (
                 <span className="bg-green-100 text-green-800 border border-green-200 px-3 py-1.5 rounded-full text-sm font-medium">
                   🌍 Public

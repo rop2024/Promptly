@@ -13,19 +13,6 @@ const entrySchema = new mongoose.Schema({
     trim: true,
     maxlength: [10000, 'Content cannot be more than 10000 characters']
   },
-  mood: {
-    type: String,
-    enum: [
-      'happy', 'sad', 'excited', 'angry', 'peaceful', 
-      'anxious', 'grateful', 'tired', 'motivated', 'neutral'
-    ],
-    default: 'neutral'
-  },
-  tags: [{
-    type: String,
-    trim: true,
-    maxlength: [20, 'Tag cannot be more than 20 characters']
-  }],
   isPublic: {
     type: Boolean,
     default: false
@@ -46,7 +33,6 @@ const entrySchema = new mongoose.Schema({
 
 // Index for better query performance
 entrySchema.index({ user: 1, createdAt: -1 });
-entrySchema.index({ tags: 1 });
 entrySchema.index({ user: 1, countsForStreak: 1 });
 
 // Update user's writing streak when a new entry is created
@@ -94,8 +80,6 @@ entrySchema.methods.toClientFormat = function() {
     id: obj._id,
     title: obj.title,
     content: obj.content,
-    mood: obj.mood,
-    tags: obj.tags,
     isPublic: obj.isPublic,
     createdAt: obj.createdAt,
     updatedAt: obj.updatedAt,

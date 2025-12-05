@@ -1,32 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const MOOD_EMOJIS = {
-  happy: '😊',
-  sad: '😢',
-  excited: '🎉',
-  angry: '😠',
-  peaceful: '☮️',
-  anxious: '😰',
-  grateful: '🙏',
-  tired: '😴',
-  motivated: '💪',
-  neutral: '😐'
-};
-
-const MOOD_COLORS = {
-  happy: 'bg-yellow-100 text-yellow-800',
-  sad: 'bg-blue-100 text-blue-800',
-  excited: 'bg-orange-100 text-orange-800',
-  angry: 'bg-red-100 text-red-800',
-  peaceful: 'bg-green-100 text-green-800',
-  anxious: 'bg-purple-100 text-purple-800',
-  grateful: 'bg-teal-100 text-teal-800',
-  tired: 'bg-indigo-100 text-indigo-800',
-  motivated: 'bg-pink-100 text-pink-800',
-  neutral: 'bg-gray-100 text-gray-800'
-};
-
 const EntryCard = ({ entry, onEdit, onDelete, onView }) => {
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -56,17 +30,12 @@ const EntryCard = ({ entry, onEdit, onDelete, onView }) => {
         {/* Header */}
         <div className="flex justify-between items-start mb-3">
           <div className="flex items-center space-x-3 flex-1 min-w-0">
-            <span className="text-2xl flex-shrink-0">
-              {MOOD_EMOJIS[entry.mood] || '📝'}
-            </span>
+            <span className="text-2xl flex-shrink-0">📝</span>
             <div className="min-w-0 flex-1">
               <h3 className="text-lg font-semibold text-gray-800 truncate">
                 {entry.title}
               </h3>
               <div className="flex items-center space-x-2 mt-1">
-                <span className={`text-xs font-medium px-2 py-1 rounded-full ${MOOD_COLORS[entry.mood] || 'bg-gray-100 text-gray-800'}`}>
-                  {entry.mood}
-                </span>
                 {entry.isPublic && (
                   <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
                     Public

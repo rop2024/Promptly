@@ -31,9 +31,7 @@ const EntryNew = () => {
     
     return {
       title,
-      content: `${randomPrompt}\n\n`,
-      mood: 'neutral',
-      tags: ['daily-prompt']
+      content: `${randomPrompt}\n\n`
     };
   };
 

@@ -1,18 +1,5 @@
 import React from 'react';
 
-const MOOD_EMOJIS = {
-  happy: '😊',
-  sad: '😢',
-  excited: '🎉',
-  angry: '😠',
-  peaceful: '☮️',
-  anxious: '😰',
-  grateful: '🙏',
-  tired: '😴',
-  motivated: '💪',
-  neutral: '😐'
-};
-
 const EntryList = ({ 
   entries, 
   onEdit, 
@@ -67,7 +54,7 @@ const EntryList = ({
           <div className="p-6">
             <div className="flex justify-between items-start mb-3">
               <div className="flex items-center space-x-3">
-                <span className="text-2xl">{MOOD_EMOJIS[entry.mood]}</span>
+                <span className="text-2xl">📝</span>
                 <h3 className="text-xl font-semibold text-gray-800">{entry.title}</h3>
                 {entry.isPublic && (
                   <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
