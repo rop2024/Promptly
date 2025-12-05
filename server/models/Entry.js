@@ -26,6 +26,12 @@ const entrySchema = new mongoose.Schema({
   countsForStreak: {
     type: Boolean,
     default: true
+  },
+  // Track time spent writing (in seconds)
+  timeSpent: {
+    type: Number,
+    default: 0,
+    min: 0
   }
 }, {
   timestamps: true // This adds createdAt and updatedAt automatically
@@ -81,6 +87,7 @@ entrySchema.methods.toClientFormat = function() {
     title: obj.title,
     content: obj.content,
     isPublic: obj.isPublic,
+    timeSpent: obj.timeSpent || 0,
     createdAt: obj.createdAt,
     updatedAt: obj.updatedAt,
     user: obj.user

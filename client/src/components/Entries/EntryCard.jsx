@@ -17,6 +17,14 @@ const EntryCard = ({ entry, onEdit, onDelete, onView }) => {
     return content.substring(0, maxLength) + '...';
   };
 
+  const formatTime = (seconds) => {
+    if (!seconds || seconds === 0) return null;
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    if (mins === 0) return `${secs}s`;
+    return `${mins}m ${secs}s`;
+  };
+
   const isRecentlyUpdated = () => {
     if (!entry.updatedAt) return false;
     const updated = new Date(entry.updatedAt);
@@ -110,6 +118,14 @@ const EntryCard = ({ entry, onEdit, onDelete, onView }) => {
             <span>Created: {formatDate(entry.createdAt)}</span>
             {isRecentlyUpdated() && (
               <span>Updated: {formatDate(entry.updatedAt)}</span>
+            )}
+            {formatTime(entry.timeSpent) && (
+              <span className="flex items-center text-indigo-600 font-medium">
+                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                {formatTime(entry.timeSpent)}
+              </span>
             )}
           </div>
           <Link
