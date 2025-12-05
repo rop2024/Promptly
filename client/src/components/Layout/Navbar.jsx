@@ -25,9 +25,9 @@ const Navbar = ({ currentUser, onLogout }) => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">J</span>
+                <span className="text-white font-bold text-sm">P</span>
               </div>
-              <span className="text-xl font-bold text-gray-800">JournalApp</span>
+              <span className="text-xl font-bold text-gray-800">Promptly</span>
             </Link>
           </div>
 
