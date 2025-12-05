@@ -243,7 +243,7 @@ const Settings = () => {
       const dataStr = JSON.stringify(exportData, null, 2);
       const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
       
-      const exportFileDefaultName = `journal-export-${new Date().toISOString().split('T')[0]}.json`;
+      const exportFileDefaultName = `promptly-export-${new Date().toISOString().split('T')[0]}.json`;
       
       const linkElement = document.createElement('a');
       linkElement.setAttribute('href', dataUri);
@@ -525,8 +525,8 @@ const Settings = () => {
           {activeTab === 'preferences' && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
               <div className="mb-6">
-                <h2 className="text-xl font-bold text-gray-800">Journaling Preferences</h2>
-                <p className="text-gray-600">Customize your journaling experience</p>
+                <h2 className="text-xl font-bold text-gray-800">Writing Preferences</h2>
+                <p className="text-gray-600">Customize your writing experience</p>
               </div>
 
               <form onSubmit={handlePreferencesSubmit} className="space-y-8">
@@ -563,7 +563,7 @@ const Settings = () => {
                 {/* Prompt Time */}
                 <div>
                   <h3 className="text-lg font-semibold text-gray-800 mb-4">Preferred Prompt Time</h3>
-                  <p className="text-gray-600 mb-4">When do you prefer to journal?</p>
+                  <p className="text-gray-600 mb-4">When do you prefer to write?</p>
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {PROMPT_TIMES.map(time => (
@@ -598,7 +598,7 @@ const Settings = () => {
                   <div className="space-y-4">
                     {[
                       { id: 'dailyReminder', label: 'Daily Reminder', description: 'Remind me to write every day' },
-                      { id: 'weeklySummary', label: 'Weekly Summary', description: 'Send weekly journaling statistics' },
+                      { id: 'weeklySummary', label: 'Weekly Summary', description: 'Send weekly writing statistics' },
                       { id: 'streakReminders', label: 'Streak Reminders', description: 'Notify me about my writing streak' }
                     ].map(notification => (
                       <label key={notification.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition duration-200">
@@ -641,7 +641,7 @@ const Settings = () => {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
               <div className="mb-6">
                 <h2 className="text-xl font-bold text-gray-800">Data Management</h2>
-                <p className="text-gray-600">Manage your journal data</p>
+                <p className="text-gray-600">Manage your data</p>
               </div>
 
               <div className="space-y-6">
@@ -651,12 +651,12 @@ const Settings = () => {
                     <div>
                       <h3 className="text-lg font-semibold text-gray-800 mb-2">Export Your Data</h3>
                       <p className="text-gray-600 mb-4">
-                        Download all your journal entries, prompts, and statistics in JSON format.
+                        Download all your entries, prompts, and statistics in JSON format.
                       </p>
                       <ul className="text-gray-600 text-sm space-y-1 mb-4">
                         <li className="flex items-center">
                           <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                          All journal entries with metadata
+                          All entries with metadata
                         </li>
                         <li className="flex items-center">
                           <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
@@ -711,7 +711,7 @@ const Settings = () => {
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
                   <h3 className="text-lg font-semibold text-blue-800 mb-2">Privacy Information</h3>
                   <p className="text-blue-700">
-                    Your journal entries are private by default. Only entries marked as "public" are visible to others.
+                    Your entries are private by default. Only entries marked as "public" are visible to others.
                     We use encryption to protect your data and never share it with third parties.
                   </p>
                 </div>
@@ -760,7 +760,7 @@ const Settings = () => {
                         <div>
                           <h4 className="font-semibold text-orange-800 mb-1">Clear All Data</h4>
                           <p className="text-orange-600 text-sm">
-                            Remove all journal entries while keeping your account active.
+                            Remove all entries while keeping your account active.
                           </p>
                         </div>
                         <button

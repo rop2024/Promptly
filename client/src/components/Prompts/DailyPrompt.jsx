@@ -248,7 +248,7 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
           onChange={(e) => setUserResponse(e.target.value)}
           rows="8"
           className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-          placeholder="Write your response here... (This will create a new journal entry)"
+          placeholder="Write your response here... (This will create a new entry)"
         />
       </div>
 

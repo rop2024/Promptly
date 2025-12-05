@@ -57,7 +57,7 @@ const EntriesPage = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">Journal Entries</h1>
+          <h1 className="text-3xl font-bold text-gray-800">Entries</h1>
           <p className="text-gray-600 mt-1">Your personal thoughts and reflections</p>
         </div>
         <Link
@@ -123,7 +123,7 @@ const EntriesPage = () => {
           <p className="text-gray-500 mb-6">
             {filters.search || filters.tag 
               ? "Try adjusting your filters to see more entries."
-              : "Start writing your first journal entry!"
+              : "Start writing your first entry!"
             }
           </p>
           <Link

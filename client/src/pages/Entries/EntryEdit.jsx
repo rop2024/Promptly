@@ -120,7 +120,7 @@ const EntryEdit = () => {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
           <div className="text-6xl mb-4">🔍</div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Entry Not Found</h2>
-          <p className="text-gray-600 mb-6">The journal entry you're trying to edit doesn't exist or has been deleted.</p>
+          <p className="text-gray-600 mb-6">The entry you're trying to edit doesn't exist or has been deleted.</p>
           <div className="flex justify-center space-x-4">
             <Link
               to="/entries"
@@ -186,7 +186,7 @@ const EntryEdit = () => {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-800">Edit Entry</h1>
-          <p className="text-gray-600 mt-1">Update your journal entry</p>
+          <p className="text-gray-600 mt-1">Update your entry</p>
         </div>
         
         <div className="text-sm text-gray-500">

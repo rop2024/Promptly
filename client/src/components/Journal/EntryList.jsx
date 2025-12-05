@@ -42,7 +42,7 @@ const EntryList = ({
       <div className="text-center py-12 bg-white rounded-lg shadow-md">
         <div className="text-6xl mb-4">📝</div>
         <h3 className="text-xl font-semibold text-gray-700 mb-2">No entries yet</h3>
-        <p className="text-gray-500">Start writing your first journal entry!</p>
+        <p className="text-gray-500">Start writing your first entry!</p>
       </div>
     );
   }

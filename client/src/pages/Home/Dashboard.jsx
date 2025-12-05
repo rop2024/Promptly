@@ -224,7 +224,7 @@ const Dashboard = ({ currentUser }) => {
           <div className="bg-white rounded-xl shadow-sm p-8 text-center">
             <div className="text-6xl mb-4">📝</div>
             <h3 className="text-lg font-semibold text-gray-700 mb-2">No entries yet</h3>
-            <p className="text-gray-500 mb-4">Start your journaling journey with your first entry!</p>
+            <p className="text-gray-500 mb-4">Start your writing journey with your first entry!</p>
             <Link
               to="/entries/new"
               className="bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 transition duration-200"

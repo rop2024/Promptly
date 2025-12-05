@@ -82,7 +82,7 @@ const EntryDetail = () => {
       <div className="max-w-4xl mx-auto text-center py-12">
         <div className="text-6xl mb-4">🔍</div>
         <h2 className="text-2xl font-bold text-gray-800 mb-2">Entry Not Found</h2>
-        <p className="text-gray-600 mb-6">The journal entry you're looking for doesn't exist or has been deleted.</p>
+        <p className="text-gray-600 mb-6">The entry you're looking for doesn't exist or has been deleted.</p>
         <Link
           to="/entries"
           className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-200 font-medium"
