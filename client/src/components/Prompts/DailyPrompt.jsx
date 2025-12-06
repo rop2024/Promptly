@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import promptService from '../../services/promptService.js';
+import TimerWidget from '../Timer/TimerWidget.jsx';
 
 const CATEGORY_ICONS = {
   reflection: '🤔',
@@ -36,9 +37,23 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
     try {
       setLoading(true);
       const result = await promptService.getTodaysPrompt();
-      setPromptData(result.data);
+      setPromptData(result?.data || result);
     } catch (error) {
       console.error('Error loading prompt:', error);
+      setPromptData(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRefreshPrompt = async () => {
+    try {
+      setLoading(true);
+      const result = await promptService.getTodaysPrompt();
+      setPromptData(result?.data || result);
+    } catch (error) {
+      console.error('Error refreshing prompt:', error);
+      alert('Failed to load new prompt. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -59,7 +74,8 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
       
       // Reload prompt data to get updated streak
       const result = await promptService.getTodaysPrompt();
-      setPromptData(result.data);
+      const updatedData = result?.data || result;
+      setPromptData(updatedData);
       
       setUserResponse('');
       setShowPromptModal(false);
@@ -69,7 +85,7 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
       }
       
       // Show success message
-      alert(`Great job! Your streak is now ${result.data.streak} days!`);
+      alert(`Great job! Your streak is now ${updatedData?.streak || 0} days!`);
     } catch (error) {
       console.error('Error completing prompt:', error);
       alert('Failed to complete prompt. Please try again.');
@@ -83,10 +99,11 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
       await promptService.skipPrompt();
       promptService.storeLocalCompletion();
       const result = await promptService.getTodaysPrompt();
-      setPromptData(result.data);
+      setPromptData(result?.data || result);
       setShowPromptModal(false);
     } catch (error) {
       console.error('Error skipping prompt:', error);
+      alert('Failed to skip prompt. Please try again.');
     }
   };
 
@@ -234,8 +251,21 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
               {promptData.category}
             </span>
           </div>
-          <div className="text-sm text-gray-500">
-            🔥 {promptData.streak} day streak
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={handleRefreshPrompt}
+              disabled={loading}
+              className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center disabled:opacity-50"
+              title="Get a different prompt"
+            >
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Change Prompt
+            </button>
+            <div className="text-sm text-gray-500">
+              🔥 {promptData.streak} day streak
+            </div>
           </div>
         </div>
         
@@ -250,6 +280,11 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
           className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
           placeholder="Write your response here... (This will create a new entry)"
         />
+        
+        {/* Timer Widget */}
+        <div className="mt-4 flex justify-center">
+          <TimerWidget showControls={true} />
+        </div>
       </div>
 
       <div className="flex flex-col sm:flex-row justify-between space-y-3 sm:space-y-0 sm:space-x-4">

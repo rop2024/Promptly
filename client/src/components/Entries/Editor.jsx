@@ -69,26 +69,42 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
 
 
 
+  const [showTitlePrompt, setShowTitlePrompt] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // If content is written but no title, show title prompt
+    if (formData.content.trim() && !showTitlePrompt && !formData.title.trim()) {
+      setShowTitlePrompt(true);
+      return;
+    }
     
     // Stop timer
     setIsActive(false);
     
     // Validation
     const newErrors = {};
-    if (!formData.title.trim()) newErrors.title = 'Title is required';
     if (!formData.content.trim()) newErrors.content = 'Content is required';
-    if (formData.title.length > 100) newErrors.title = 'Title must be 100 characters or less';
     if (formData.content.length > 10000) newErrors.content = 'Content must be 10000 characters or less';
+    
+    // Title is optional, but if provided must be under limit
+    if (formData.title.length > 100) newErrors.title = 'Title must be 100 characters or less';
     
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
+    // If no title provided, generate one from content
+    const finalFormData = {
+      ...formData,
+      title: formData.title.trim() || formData.content.substring(0, 50).trim() + '...',
+      timeSpent
+    };
+
     // Include time spent in submission
-    onSubmit({ ...formData, timeSpent });
+    onSubmit(finalFormData);
   };
 
 
@@ -101,61 +117,62 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
             {mode === 'edit' ? 'Edit Entry' : 'Write New Entry'}
           </h2>
           
-          {/* Time Recorder */}
-          <div className="flex items-center space-x-3">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-4 py-2 rounded-lg border border-blue-200">
-              <div className="flex items-center space-x-2">
-                <svg className={`w-5 h-5 ${isActive ? 'text-green-500 animate-pulse' : 'text-gray-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+          {/* Time Recorder with Hover Controls */}
+          <div className="group relative">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-3 rounded-xl border-2 border-blue-200 hover:border-blue-300 transition-all duration-200 cursor-pointer">
+              <div className="flex items-center space-x-3">
+                <div className={`p-2 rounded-lg ${
+                  isActive ? 'bg-green-100' : 'bg-gray-100'
+                }`}>
+                  <svg className={`w-6 h-6 ${
+                    isActive ? 'text-green-600 animate-pulse' : 'text-gray-400'
+                  }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
                 <div>
-                  <div className="text-xs text-gray-600">Time Spent</div>
-                  <div className="text-lg font-bold text-gray-800">{formatTime(timeSpent)}</div>
+                  <div className="text-xs text-gray-500 font-medium">Writing Time</div>
+                  <div className="text-2xl font-bold text-gray-800 tabular-nums">{formatTime(timeSpent)}</div>
                 </div>
               </div>
             </div>
-            <button
-              type="button"
-              onClick={() => setIsActive(!isActive)}
-              className={`px-3 py-2 rounded-lg font-medium transition duration-200 ${
-                isActive 
-                  ? 'bg-orange-100 text-orange-700 hover:bg-orange-200'
-                  : 'bg-green-100 text-green-700 hover:bg-green-200'
-              }`}
-            >
-              {isActive ? 'Pause' : 'Resume'}
-            </button>
+            
+            {/* Hover Controls */}
+            <div className="absolute top-full right-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+              <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-2 flex space-x-2">
+                <button
+                  type="button"
+                  onClick={() => setIsActive(!isActive)}
+                  className={`px-4 py-2 rounded-lg font-medium transition duration-200 flex items-center space-x-2 ${
+                    isActive 
+                      ? 'bg-orange-100 text-orange-700 hover:bg-orange-200'
+                      : 'bg-green-100 text-green-700 hover:bg-green-200'
+                  }`}
+                >
+                  {isActive ? (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>Pause</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>Resume</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Title */}
-          <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-              Title *
-            </label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ${
-                errors.title ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="What's on your mind today?"
-            />
-            <div className="flex justify-between mt-1">
-              {errors.title && (
-                <span className="text-sm text-red-600">{errors.title}</span>
-              )}
-              <span className={`text-sm ml-auto ${formData.title.length > 80 ? 'text-orange-500' : 'text-gray-500'}`}>
-                {formData.title.length}/100
-              </span>
-            </div>
-          </div>
-
-          {/* Content */}
+          {/* Content - Show First */}
           <div>
             <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
               Content *
@@ -169,7 +186,8 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
               className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none transition duration-200 ${
                 errors.content ? 'border-red-500' : 'border-gray-300'
               }`}
-              placeholder="Write your thoughts here..."
+              placeholder="Write your thoughts here... (Start writing, we'll ask for a title when you're done)"
+              autoFocus
             />
             <div className="flex justify-between mt-1">
               {errors.content && (
@@ -180,6 +198,35 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
               </span>
             </div>
           </div>
+
+          {/* Title - Show After Content or Always in Edit Mode */}
+          {(showTitlePrompt || mode === 'edit' || formData.title) && (
+            <div className="bg-blue-50 p-4 rounded-lg border-2 border-blue-200">
+              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+                Title (optional - we'll auto-generate if left blank)
+              </label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ${
+                  errors.title ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder="Give your entry a title (optional)"
+                autoFocus={showTitlePrompt}
+              />
+              <div className="flex justify-between mt-1">
+                {errors.title && (
+                  <span className="text-sm text-red-600">{errors.title}</span>
+                )}
+                <span className={`text-sm ml-auto ${formData.title.length > 80 ? 'text-orange-500' : 'text-gray-500'}`}>
+                  {formData.title.length}/100
+                </span>
+              </div>
+            </div>
+          )}
 
 
 
@@ -211,7 +258,7 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
             </button>
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !formData.content.trim()}
               className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed transition duration-200 font-medium flex items-center"
             >
               {isLoading ? (
@@ -222,8 +269,10 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
                   </svg>
                   {mode === 'edit' ? 'Updating...' : 'Creating...'}
                 </>
+              ) : showTitlePrompt && !formData.title.trim() ? (
+                mode === 'edit' ? 'Update Entry' : 'Save Entry'
               ) : (
-                mode === 'edit' ? 'Update Entry' : 'Create Entry'
+                mode === 'edit' ? 'Update Entry' : (formData.content.trim() && !showTitlePrompt ? 'Continue' : 'Save Entry')
               )}
             </button>
           </div>

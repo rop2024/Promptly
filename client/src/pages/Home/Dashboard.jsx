@@ -6,6 +6,7 @@ import promptService from '../../services/promptService.js';
 import EntryCard from '../../components/Entries/EntryCard.jsx';
 import StreakDisplay from '../../components/Streak/StreakDisplay.jsx';
 import DailyPrompt from '../../components/Prompts/DailyPrompt.jsx';
+import TimerWidget from '../../components/Timer/TimerWidget.jsx';
 
 const Dashboard = ({ currentUser }) => {
   const [recentEntries, setRecentEntries] = useState([]);
