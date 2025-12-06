@@ -80,7 +80,7 @@ const EntryNew = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <main className="max-w-3xl mx-auto px-4 py-8">
       {/* Back Navigation */}
       <div className="mb-6">
         <Link
@@ -275,7 +275,7 @@ const EntryNew = () => {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

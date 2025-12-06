@@ -15,7 +15,7 @@ const EntriesPage = () => {
   const [pagination, setPagination] = useState(null);
 
   useEffect(() => {
-    document.title = 'Your Journal - Promptly';
+    document.title = 'Your Entries - Promptly';
   }, []);
 
   useEffect(() => {
@@ -63,7 +63,7 @@ const EntriesPage = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">📚 Your Journal</h1>
+          <h1 className="text-3xl font-bold text-gray-800">📚 Your Writing</h1>
           <p className="text-gray-600 mt-1">Browse and revisit your writing journey</p>
         </div>
         <Link

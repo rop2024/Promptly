@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Lightbulb, RefreshCw, SkipForward, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import promptService from '../../services/promptService.js';
 import TimerWidget from '../Timer/TimerWidget.jsx';
 
@@ -28,6 +29,7 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
   const [completing, setCompleting] = useState(false);
   const [showPromptModal, setShowPromptModal] = useState(false);
   const [userResponse, setUserResponse] = useState('');
+  const [showAbout, setShowAbout] = useState(false);
 
   useEffect(() => {
     loadTodaysPrompt();
@@ -128,17 +130,31 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
   // If prompt already completed today
   if (promptData.completed) {
     return (
-      <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
-        <div className="text-4xl mb-3">🎉</div>
-        <h3 className="text-lg font-semibold text-green-800 mb-2">
-          Daily Prompt Complete!
-        </h3>
-        <p className="text-green-600 mb-4">
-          You've completed your daily prompt. Come back tomorrow for a new one!
-        </p>
-        <div className="flex justify-center space-x-4 text-sm text-green-700">
-          <span>🔥 Streak: {promptData.streak} days</span>
-          <span>✅ Total: {promptData.totalCompleted || 0}</span>
+      <div className="bg-white rounded-lg shadow-soft2 overflow-hidden">
+        <div className="bg-gradient-to-r from-brand-accent-2 to-brand-primary text-white p-8 text-center">
+          <div className="flex justify-center mb-4">
+            <div className="bg-white/20 backdrop-blur-sm rounded-full p-4">
+              <Check className="w-12 h-12" />
+            </div>
+          </div>
+          <h3 className="text-2xl font-bold mb-2">Great Work! ✨</h3>
+          <p className="text-white/90">
+            You've completed your daily prompt. Come back tomorrow for a new one!
+          </p>
+        </div>
+        
+        <div className="p-8 text-center">
+          <div className="bg-brand-accent-1/50 rounded-lg p-6 inline-block border border-brand-primary/20">
+            <p className="text-sm text-gray-600 mb-2 font-medium">Current Streak</p>
+            <div className="flex items-center justify-center space-x-2">
+              <span className="text-3xl">🔥</span>
+              <span className="text-4xl font-bold text-brand-primary">{promptData.streak}</span>
+              <span className="text-lg text-gray-600">days</span>
+            </div>
+            <p className="text-sm text-gray-500 mt-3">
+              ✅ {promptData.totalCompleted || 0} total completions
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -147,41 +163,51 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
   // Compact version for dashboard
   if (compact) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-4 border-l-4 border-blue-500">
+      <div className="bg-white rounded-lg shadow-soft p-4 border-l-4 border-brand-primary">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <div className="flex items-center mb-2">
-              <span className="text-lg mr-2">{CATEGORY_ICONS[promptData.category]}</span>
-              <span className={`text-xs font-medium px-2 py-1 rounded-full ${CATEGORY_COLORS[promptData.category]}`}>
+            <div className="flex items-center mb-2 space-x-2">
+              <span className="text-lg">{CATEGORY_ICONS[promptData.category]}</span>
+              <span className="text-xs font-medium px-2 py-1 rounded-full bg-brand-accent-1 text-gray-700 border border-brand-primary/20">
                 {promptData.category}
               </span>
+              <span className="text-xs text-gray-500 flex items-center">
+                <span className="mr-1">🔥</span> {promptData.streak}
+              </span>
             </div>
-            <h3 className="font-semibold text-gray-800 mb-2">{promptData.prompt}</h3>
+            <h3 className="font-semibold text-gray-800 mb-2 text-sm leading-relaxed">{promptData.prompt}</h3>
           </div>
         </div>
         <button
           onClick={handleWriteEntry}
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition duration-200 text-sm"
+          className="w-full bg-brand-primary text-white py-2 px-4 rounded-lg hover:scale-105 transition-transform duration-300 text-sm font-medium"
         >
           Write Response
         </button>
         
         {/* Prompt Modal */}
         {showPromptModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="p-6">
-                <div className="flex items-center mb-4">
-                  <span className="text-2xl mr-3">{CATEGORY_ICONS[promptData.category]}</span>
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-soft2">
+              {/* Modal Header */}
+              <div className="bg-gradient-to-r from-brand-accent-2 to-brand-primary text-white p-6">
+                <div className="flex items-center space-x-3">
+                  <Lightbulb className="w-6 h-6" />
                   <div>
-                    <h2 className="text-xl font-bold">📝 Today's Prompt</h2>
-                    <span className={`text-sm font-medium px-2 py-1 rounded-full ${CATEGORY_COLORS[promptData.category]}`}>
-                      {promptData.category}
-                    </span>
+                    <h2 className="text-xl font-bold">Today's Prompt</h2>
+                    <div className="flex items-center space-x-2 mt-1">
+                      <span className="text-lg">{CATEGORY_ICONS[promptData.category]}</span>
+                      <span className="text-sm font-medium px-2 py-1 rounded-full bg-white/20 backdrop-blur-sm">
+                        {promptData.category}
+                      </span>
+                    </div>
                   </div>
                 </div>
-                
-                <div className="bg-gray-50 p-4 rounded-lg mb-4">
+              </div>
+              
+              {/* Modal Body */}
+              <div className="p-6">
+                <div className="bg-brand-accent-1/30 p-4 rounded-lg mb-4 border border-brand-primary/20">
                   <p className="text-lg font-medium text-gray-800">{promptData.prompt}</p>
                 </div>
                 
@@ -193,7 +219,7 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
                     value={userResponse}
                     onChange={(e) => setUserResponse(e.target.value)}
                     rows="6"
-                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300"
                     placeholder="Write your thoughts here..."
                   />
                 </div>
@@ -202,21 +228,21 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
                   <button
                     onClick={handleSkipPrompt}
                     disabled={completing}
-                    className="px-4 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50"
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50 transition-colors duration-300"
                   >
                     Skip for Today
                   </button>
                   <div className="space-x-2">
                     <button
                       onClick={() => setShowPromptModal(false)}
-                      className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                      className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-all duration-300"
                     >
                       Cancel
                     </button>
                     <button
                       onClick={handleCompletePrompt}
                       disabled={completing}
-                      className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:bg-blue-300"
+                      className="px-4 py-2 bg-brand-primary text-white rounded-lg hover:scale-105 transition-transform disabled:bg-gray-300 disabled:hover:scale-100"
                     >
                       {completing ? 'Completing...' : 'Complete Prompt'}
                     </button>
@@ -232,52 +258,44 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
 
   // Full version
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-xl shadow-lg p-6 border border-blue-200">
-      <div className="text-center mb-6">
-        <div className="flex items-center justify-center mb-3">
-          <span className="text-3xl mr-3">💡</span>
-          <h2 className="text-2xl font-bold text-gray-800">📝 Today's Writing Prompt</h2>
-        </div>
-        <p className="text-gray-600">
-          Reflect on this question and let your thoughts flow
-        </p>
-      </div>
-
-      <div className="bg-white rounded-lg p-6 shadow-sm mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center">
-            <span className="text-2xl mr-3">{CATEGORY_ICONS[promptData.category]}</span>
-            <span className={`font-medium px-3 py-1 rounded-full ${CATEGORY_COLORS[promptData.category]}`}>
-              {promptData.category}
-            </span>
-          </div>
+    <div className="bg-white rounded-lg shadow-soft2 overflow-hidden">
+      {/* Gradient Header */}
+      <div className="bg-gradient-to-r from-brand-accent-2 to-brand-primary text-white p-6">
+        <div className="flex items-center justify-between mb-3">
           <div className="flex items-center space-x-3">
-            <button
-              onClick={handleRefreshPrompt}
-              disabled={loading}
-              className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center disabled:opacity-50"
-              title="Get a different prompt"
-            >
-              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              Change Prompt
-            </button>
-            <div className="text-sm text-gray-500">
-              🔥 {promptData.streak} day streak
+            <Lightbulb className="w-8 h-8" />
+            <div>
+              <h2 className="text-2xl font-bold">Today's Writing Prompt</h2>
+              <p className="text-white/90 text-sm mt-1">Let your thoughts flow</p>
             </div>
+          </div>
+          <div className="flex items-center space-x-2 text-white/90">
+            <span className="text-2xl">🔥</span>
+            <span className="font-semibold">{promptData.streak} day streak</span>
           </div>
         </div>
         
-        <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
-          {promptData.prompt}
-        </h3>
+        <div className="flex items-center space-x-2 mt-4">
+          <span className="text-2xl">{CATEGORY_ICONS[promptData.category]}</span>
+          <span className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium">
+            {promptData.category}
+          </span>
+        </div>
+      </div>
+
+      {/* Prompt Body */}
+      <div className="p-6">
+        <div className="mb-6">
+          <p className="text-lg text-gray-800 font-medium leading-relaxed">
+            {promptData.prompt}
+          </p>
+        </div>
 
         <textarea
           value={userResponse}
           onChange={(e) => setUserResponse(e.target.value)}
           rows="8"
-          className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+          className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary resize-none transition-all duration-300"
           placeholder="Write your response here... (This will create a new entry)"
         />
         
@@ -285,40 +303,80 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
         <div className="mt-4 flex justify-center">
           <TimerWidget showControls={true} />
         </div>
-      </div>
 
-      <div className="flex flex-col sm:flex-row justify-between space-y-3 sm:space-y-0 sm:space-x-4">
-        <button
-          onClick={handleSkipPrompt}
-          disabled={completing}
-          className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition duration-200"
-        >
-          Skip for Today
-        </button>
-        <button
-          onClick={handleCompletePrompt}
-          disabled={completing || !userResponse.trim()}
-          className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed transition duration-200 font-medium"
-        >
-          {completing ? (
-            <span className="flex items-center justify-center">
-              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Completing...
-            </span>
-          ) : (
-            'Complete Prompt & Save Entry'
-          )}
-        </button>
-      </div>
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0 sm:space-x-4 mt-6">
+          <div className="flex space-x-3 w-full sm:w-auto">
+            <button
+              onClick={handleRefreshPrompt}
+              disabled={loading}
+              className="flex items-center space-x-2 border border-gray-200 px-4 py-2 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-all duration-300 text-sm font-medium"
+              title="Get a different prompt"
+            >
+              <RefreshCw className="w-4 h-4" />
+              <span>Change</span>
+            </button>
+            
+            <button
+              onClick={handleSkipPrompt}
+              disabled={completing}
+              className="flex items-center space-x-2 border border-gray-200 px-4 py-2 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-all duration-300 text-sm font-medium"
+            >
+              <SkipForward className="w-4 h-4" />
+              <span>Skip Today</span>
+            </button>
+          </div>
 
-      {promptData.streak > 0 && (
-        <div className="mt-4 text-center text-sm text-gray-600">
-          Keep going! You're on a {promptData.streak}-day streak. 🔥
+          <button
+            onClick={handleCompletePrompt}
+            disabled={completing || !userResponse.trim()}
+            className="flex items-center space-x-2 bg-brand-primary text-white px-6 py-2 rounded-lg transition-transform hover:scale-105 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:hover:scale-100 font-medium w-full sm:w-auto justify-center"
+          >
+            {completing ? (
+              <>
+                <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Completing...</span>
+              </>
+            ) : (
+              <>
+                <Check className="w-4 h-4" />
+                <span>Complete & Save</span>
+              </>
+            )}
+          </button>
         </div>
-      )}
+
+        {/* About Section - Collapsible */}
+        <div className="mt-6 border-t border-gray-200 pt-4">
+          <button
+            onClick={() => setShowAbout(!showAbout)}
+            className="flex items-center justify-between w-full text-left text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors duration-300"
+          >
+            <span>About Daily Prompts</span>
+            {showAbout ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+          
+          <div 
+            className="collapse"
+            style={{ height: showAbout ? 'auto' : '0' }}
+          >
+            <div className="mt-3 text-sm text-gray-600 space-y-2">
+              <p>
+                Daily prompts help you maintain a consistent writing practice. Complete prompts to build your streak and track your progress.
+              </p>
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li>Builds writing consistency and habit formation</li>
+                <li>Tracks your daily streak and total completions</li>
+                <li>Explore different categories and themes</li>
+                <li>Your responses are saved as journal entries</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

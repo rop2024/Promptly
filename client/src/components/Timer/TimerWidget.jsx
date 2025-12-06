@@ -49,19 +49,19 @@ const TimerWidget = ({ initialTime = 0, isActive: externalIsActive = false, onTo
 
   return (
     <div className="group relative">
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-3 rounded-xl border-2 border-blue-200 hover:border-blue-300 transition-all duration-200 cursor-pointer">
+      <div className="bg-gradient-to-r from-brand-accent-1 to-brand-accent-2/30 px-5 py-3 rounded-lg border border-brand-primary/20 hover:border-brand-primary transition-all duration-300 cursor-pointer shadow-soft">
         <div className="flex items-center space-x-3">
-          <div className={`p-2 rounded-lg ${
-            isActive ? 'bg-green-100' : 'bg-gray-100'
+          <div className={`p-2 rounded-lg transition-colors duration-300 ${
+            isActive ? 'bg-brand-primary/20' : 'bg-gray-100'
           }`}>
-            <svg className={`w-6 h-6 ${
-              isActive ? 'text-green-600 animate-pulse' : 'text-gray-400'
+            <svg className={`w-6 h-6 transition-colors duration-300 ${
+              isActive ? 'text-brand-primary animate-pulse' : 'text-gray-400'
             }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <div>
-            <div className="text-xs text-gray-500 font-medium">Writing Time</div>
+            <div className="text-xs text-gray-600 font-medium">Writing Time</div>
             <div className="text-2xl font-bold text-gray-800 tabular-nums">{formatTime(timeSpent)}</div>
           </div>
         </div>
@@ -69,15 +69,15 @@ const TimerWidget = ({ initialTime = 0, isActive: externalIsActive = false, onTo
       
       {/* Hover Controls */}
       {showControls && (
-        <div className="absolute top-full right-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
-          <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-2 flex space-x-2">
+        <div className="absolute top-full right-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10">
+          <div className="bg-white rounded-lg shadow-soft2 border border-gray-200 p-2 flex space-x-2">
             <button
               type="button"
               onClick={handleToggle}
-              className={`px-4 py-2 rounded-lg font-medium transition duration-200 flex items-center space-x-2 ${
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 ${
                 isActive 
-                  ? 'bg-orange-100 text-orange-700 hover:bg-orange-200'
-                  : 'bg-green-100 text-green-700 hover:bg-green-200'
+                  ? 'bg-orange-100 text-orange-700 hover:bg-orange-200 hover:scale-105'
+                  : 'bg-brand-accent-1 text-brand-primary hover:bg-brand-accent-2/20 hover:scale-105'
               }`}
             >
               {isActive ? (
@@ -100,7 +100,7 @@ const TimerWidget = ({ initialTime = 0, isActive: externalIsActive = false, onTo
             <button
               type="button"
               onClick={() => setTimeSpent(0)}
-              className="px-4 py-2 rounded-lg font-medium transition duration-200 flex items-center space-x-2 bg-gray-100 text-gray-700 hover:bg-gray-200"
+              className="px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105"
               title="Reset timer"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

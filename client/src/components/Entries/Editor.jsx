@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getRandomPrompts } from '../../config/stuckPrompts.js';
 import authService from '../../services/authService.js';
 import analyticsService from '../../services/analyticsService.js';
+import TimerWidget from '../Timer/TimerWidget.jsx';
 
 const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' }) => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
   const [timeSpent, setTimeSpent] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [startTime, setStartTime] = useState(null);
+  const [distractionFree, setDistractionFree] = useState(false);
 
   // Stuck prompts state
   const currentUser = authService.getCurrentUser();
@@ -581,7 +583,7 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
                   }
                 }}
                 rows="12"
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none transition duration-200 ${
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary resize-none transition-all duration-300 ${
                   errors.content ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="Write your thoughts here... (Start writing, we'll ask for a title when you're done)"
@@ -692,21 +694,38 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
             </div>
           </div>
 
-          {/* Privacy Setting */}
-          <div className="flex items-center p-4 bg-gray-50 rounded-lg">
+          {/* Distraction-Free Mode Toggle */}
+          <div className="flex items-center p-4 bg-brand-accent-1/30 rounded-lg border border-brand-primary/20">
             <input
               type="checkbox"
-              id="isPublic"
-              name="isPublic"
-              checked={formData.isPublic}
-              onChange={handleChange}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              id="distractionFree"
+              checked={distractionFree}
+              onChange={(e) => setDistractionFree(e.target.checked)}
+              className="h-4 w-4 text-brand-primary focus:ring-brand-primary border-gray-300 rounded"
             />
-            <label htmlFor="isPublic" className="ml-3 block text-sm text-gray-700">
-              <span className="font-medium">Make this entry public</span>
-              <p className="text-gray-500">Other users will be able to read this entry</p>
+            <label htmlFor="distractionFree" className="ml-3 block text-sm text-gray-700">
+              <span className="font-medium">Distraction-Free Mode</span>
+              <p className="text-gray-500">Hide extra options and focus on writing</p>
             </label>
           </div>
+
+          {/* Privacy Setting */}
+          {!distractionFree && (
+            <div className="flex items-center p-4 bg-gray-50 rounded-lg">
+              <input
+                type="checkbox"
+                id="isPublic"
+                name="isPublic"
+                checked={formData.isPublic}
+                onChange={handleChange}
+                className="h-4 w-4 text-brand-primary focus:ring-brand-primary border-gray-300 rounded"
+              />
+              <label htmlFor="isPublic" className="ml-3 block text-sm text-gray-700">
+                <span className="font-medium">Make this entry public</span>
+                <p className="text-gray-500">Other users will be able to read this entry</p>
+              </label>
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
@@ -714,14 +733,14 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
               type="button"
               onClick={onCancel}
               disabled={isLoading}
-              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition duration-200 font-medium"
+              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-all duration-300 font-medium"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading || !formData.content.trim()}
-              className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed transition duration-200 font-medium flex items-center"
+              className="px-6 py-3 bg-brand-primary text-white rounded-lg hover:scale-105 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:hover:scale-100 transition-transform duration-300 font-medium flex items-center"
             >
               {isLoading ? (
                 <>
@@ -740,18 +759,19 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
           </div>
         </form>
       </div>
+      {/* End Editor Card */}
 
       {/* Side Notification */}
       {notification.show && (
         <div className="fixed top-20 right-4 z-50 animate-slide-in">
-          <div className="bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3 border border-green-600">
+          <div className="bg-brand-primary text-white px-6 py-4 rounded-lg shadow-soft2 flex items-center space-x-3 border border-brand-secondary">
             <svg className="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span className="font-medium">{notification.message}</span>
             <button
               onClick={() => setNotification({ show: false, message: '' })}
-              className="ml-2 text-white hover:text-green-100 focus:outline-none"
+              className="ml-2 text-white hover:text-white/80 focus:outline-none transition-colors duration-300"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
