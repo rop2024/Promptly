@@ -28,6 +28,9 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
   
   // Use ref to track if we've initialized the shuffle list
   const isInitialized = useRef(false);
+  
+  // Track last action type
+  const [lastAction, setLastAction] = useState(null);
 
   useEffect(() => {
     if (entry) {
@@ -82,6 +85,52 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
     }
   }, [promptIndex, shuffleList.length]);
 
+  // Inactivity timer logic - check for stuck moments
+  useEffect(() => {
+    if (!stuckEnabled) return;
+
+    // Compute threshold based on user level
+    const base = 15; // seconds
+    const threshold = Math.min(base + (level * 2), 30); // max 30 seconds
+
+    // Check every 250ms
+    const interval = setInterval(() => {
+      const now = Date.now();
+      const timeSinceLastType = (now - lastTypedAt) / 1000; // convert to seconds
+
+      // Check if conditions are met for showing stuck prompt
+      const shouldShowPrompt = 
+        timeSinceLastType >= threshold &&
+        lastAction === 'typing' &&
+        !ghostParagraphId &&
+        formData.content.length > 0; // Only show if user has started writing
+
+      if (shouldShowPrompt) {
+        // Trigger stuck prompt insertion
+        insertStuckPrompt();
+      }
+    }, 250);
+
+    return () => clearInterval(interval);
+  }, [stuckEnabled, level, lastTypedAt, lastAction, ghostParagraphId, formData.content]);
+
+  // Function to insert stuck prompt (placeholder for now)
+  const insertStuckPrompt = () => {
+    if (shuffleList.length === 0) return;
+    
+    const currentPrompt = shuffleList[promptIndex];
+    
+    // Generate unique ID for this ghost paragraph
+    const ghostId = `ghost-${Date.now()}`;
+    setGhostParagraphId(ghostId);
+    
+    // Move to next prompt for next time
+    setPromptIndex(prev => prev + 1);
+    
+    // TODO: Actually insert the ghost text into the editor
+    console.log('Inserting stuck prompt:', currentPrompt, 'with ID:', ghostId);
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
@@ -89,15 +138,22 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
       [name]: type === 'checkbox' ? checked : value
     }));
     
-    // Update last typed timestamp for stuck prompts
+    // Update last typed timestamp and action for stuck prompts
     if (name === 'content') {
       setLastTypedAt(Date.now());
+      setLastAction('typing');
     }
     
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
+  };
+
+  // Handle keypress in textarea to track typing activity
+  const handleKeyPress = () => {
+    setLastTypedAt(Date.now());
+    setLastAction('typing');
   };
 
   const formatTime = (seconds) => {
@@ -221,6 +277,7 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
               name="content"
               value={formData.content}
               onChange={handleChange}
+              onKeyDown={handleKeyPress}
               rows="12"
               className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none transition duration-200 ${
                 errors.content ? 'border-red-500' : 'border-gray-300'
