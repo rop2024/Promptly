@@ -237,12 +237,12 @@ const Stats = ({ currentUser }) => {
   return (
     <div className="space-y-6">
       {/* User Profile Header */}
-      <div className="bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 rounded-2xl shadow-xl overflow-hidden">
+      <div className="bg-gradient-to-r from-green-600 via-brand-primary to-brand-secondary rounded-2xl shadow-xl overflow-hidden">
         <div className="p-8">
           <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
             {/* Avatar */}
             <div className="relative">
-              <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center text-6xl font-bold text-purple-600 shadow-lg border-4 border-white">
+              <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center text-6xl font-bold text-brand-primary shadow-lg border-4 border-white">
                 {currentUser?.name?.charAt(0).toUpperCase() || 'U'}
               </div>
               <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg border-2 border-white">
@@ -253,7 +253,7 @@ const Stats = ({ currentUser }) => {
             {/* Profile Info */}
             <div className="flex-1 text-center md:text-left text-white">
               <h1 className="text-4xl font-bold mb-2">{currentUser?.name || 'User'}</h1>
-              <p className="text-blue-100 text-lg mb-3">{currentUser?.email || ''}</p>
+              <p className="text-green-100 text-lg mb-3">{currentUser?.email || ''}</p>
               <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 mb-3">
                 <p className="text-white/95 italic">
                   {currentUser?.bio || '"Every word written is a step towards self-discovery. Keep writing, keep growing."'}
@@ -365,11 +365,11 @@ const Stats = ({ currentUser }) => {
           <span className="mr-2">🔥</span>
           Current Streak
         </h2>
-        <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-xl shadow-md p-6 border-2 border-orange-200">
+        <div className="bg-gradient-to-r from-brand-accent-1 to-green-50 rounded-xl shadow-md p-6 border-2 border-brand-primary/30">
           <div className="flex flex-col md:flex-row items-center justify-around gap-6">
             <div className="text-center">
               <div className="text-7xl mb-2">🔥</div>
-              <div className="text-5xl font-bold text-orange-600 mb-2">
+              <div className="text-5xl font-bold text-brand-primary mb-2">
                 {streakData?.currentStreak || 0}
               </div>
               <div className="text-gray-700 font-medium text-lg">Days</div>
@@ -395,12 +395,14 @@ const Stats = ({ currentUser }) => {
       <div>
         <button
           onClick={() => setShowAllAchievements(!showAllAchievements)}
-          className="w-full bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-4 border-2 border-indigo-200 hover:border-indigo-300 transition-all duration-300 flex items-center justify-between mb-4"
+          className="w-full bg-gradient-to-r from-green-50 to-brand-accent-1 rounded-xl p-4 border-2 border-brand-primary/30 hover:border-brand-primary/50 transition-all duration-300 flex items-center justify-between mb-4 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none"
+          aria-label={showAllAchievements ? "Hide all achievements" : "Show all achievements"}
+          aria-expanded={showAllAchievements}
         >
           <div className="flex items-center">
             <span className="text-2xl mr-3">🎯</span>
             <h2 className="text-2xl font-bold text-gray-800">View All Achievements</h2>
-            <div className="ml-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-1 rounded-lg font-bold text-sm shadow-lg">
+            <div className="ml-4 bg-gradient-to-r from-brand-primary to-brand-secondary text-white px-4 py-1 rounded-lg font-bold text-sm shadow-lg">
               {completedCount}/{achievements.length} Unlocked
             </div>
           </div>
@@ -468,25 +470,25 @@ const Stats = ({ currentUser }) => {
       </div>
 
       {/* Motivational Section */}
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-lg text-white p-8">
+      <div className="bg-gradient-to-r from-green-600 via-brand-primary to-brand-secondary rounded-2xl shadow-lg text-white p-8">
         <h2 className="text-2xl font-bold mb-4">Keep Going! 💪</h2>
         <div className="space-y-3">
           {streakData?.currentStreak > 0 && (
-            <p className="text-blue-100">
+            <p className="text-green-100">
               You're on a {streakData.currentStreak}-day streak! Don't break the chain.
             </p>
           )}
           {stats?.totalWords >= 1000 && (
-            <p className="text-blue-100">
+            <p className="text-green-100">
               You've written {formatNumber(stats.totalWords)} words. That's amazing progress!
             </p>
           )}
           {stats?.totalEntries >= 10 && (
-            <p className="text-blue-100">
+            <p className="text-green-100">
               With {stats.totalEntries} entries, you're building a rich collection of thoughts and memories.
             </p>
           )}
-          <p className="text-blue-100 italic">
+          <p className="text-green-100 italic">
             "Writing is the painting of the voice." - Keep creating!
           </p>
         </div>

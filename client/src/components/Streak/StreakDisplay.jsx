@@ -217,9 +217,9 @@ const StreakCalendar = () => {
   }
 
   return (
-    <div className="bg-white rounded-lg p-3 shadow-sm">
-      <h3 className="text-base font-semibold mb-2">30-Day Activity</h3>
-      <div className="grid grid-cols-7 gap-1">
+    <div className="bg-white rounded-lg p-2 shadow-sm">
+      <h3 className="text-xs font-semibold mb-2 text-gray-700">30-Day Activity</h3>
+      <div className="grid grid-cols-15 gap-1">
         {days.map(day => {
           const hasEntry = calendarData.activity[day];
           const isToday = day === streakService.getTodayDateString();
@@ -227,28 +227,28 @@ const StreakCalendar = () => {
           return (
             <div
               key={day}
-              className={`aspect-square rounded text-xs flex items-center justify-center ${
-                hasEntry 
-                  ? 'bg-green-500 text-white' 
-                  : isToday 
-                    ? 'bg-gray-200 text-gray-600' 
-                    : 'bg-gray-100 text-gray-400'
-              } ${isToday ? 'border-2 border-blue-400' : ''}`}
-              title={`${day}${hasEntry ? ' - Entry written' : ''}`}
+              className="flex flex-col items-center"
             >
-              {new Date(day).getDate()}
+              <div
+                className={`w-5 h-5 rounded text-[10px] flex items-center justify-center transition-all duration-300 ${
+                  isToday 
+                    ? 'bg-brand-primary/20 text-brand-primary ring-1 ring-brand-primary font-semibold' 
+                    : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                }`}
+                title={`${day}${hasEntry ? ' - Entry written' : ''}`}
+              >
+                {new Date(day).getDate()}
+              </div>
+              {hasEntry && (
+                <div className="w-1 h-1 bg-brand-primary rounded-full mt-0.5" title="Entry written"></div>
+              )}
             </div>
           );
         })}
       </div>
-      <div className="flex justify-between text-xs text-gray-500 mt-2">
-        <span>Less</span>
-        <div className="flex space-x-1">
-          <div className="w-3 h-3 bg-gray-100 rounded"></div>
-          <div className="w-3 h-3 bg-green-300 rounded"></div>
-          <div className="w-3 h-3 bg-green-500 rounded"></div>
-        </div>
-        <span>More</span>
+      <div className="flex items-center justify-center text-[10px] text-gray-500 mt-2 pt-2 border-t border-gray-100">
+        <div className="w-1 h-1 bg-brand-primary rounded-full mr-1.5"></div>
+        <span>Entry written</span>
       </div>
     </div>
   );

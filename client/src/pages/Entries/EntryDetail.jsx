@@ -64,10 +64,14 @@ const EntryDetail = () => {
   };
 
   const getReadTime = (content) => {
-    const wordsPerMinute = 200;
-    const wordCount = content.trim().split(/\s+/).length;
-    const minutes = Math.ceil(wordCount / wordsPerMinute);
-    return `${minutes} min read`;
+    const wordsPerMinute = 200; // Average adult reading speed
+    const wordCount = content.trim().split(/\s+/).filter(word => word.length > 0).length;
+    const minutes = Math.max(1, Math.ceil(wordCount / wordsPerMinute));
+    
+    if (minutes === 1) {
+      return `${wordCount} words · ${minutes} min read`;
+    }
+    return `${wordCount} words · ${minutes} min read`;
   };
 
   if (loading) {

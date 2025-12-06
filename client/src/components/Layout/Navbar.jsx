@@ -1,11 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Home, BookOpen, Settings, LogOut, Menu, X, Plus } from 'lucide-react';
+import { Home, BookOpen, BarChart2, LogOut, Menu, X, Plus, User, Settings } from 'lucide-react';
 import authService from '../../services/authService.js';
+import entryService from '../../services/entryService.js';
 
 const Navbar = ({ currentUser, onLogout }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [userStats, setUserStats] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (currentUser) {
+      loadUserStats();
+    }
+  }, [currentUser]);
+
+  const loadUserStats = async () => {
+    try {
+      const response = await entryService.getStats();
+      setUserStats(response.data?.data || null);
+    } catch (error) {
+      console.error('Error loading user stats:', error);
+    }
+  };
 
   const handleLogout = () => {
     authService.logout();
@@ -43,10 +61,6 @@ const Navbar = ({ currentUser, onLogout }) => {
               <BookOpen className="w-5 h-5" />
               <span>Entries</span>
             </NavLink>
-            <NavLink to="/settings" className={navLinkClass}>
-              <Settings className="w-5 h-5" />
-              <span>Settings</span>
-            </NavLink>
           </div>
         )}
 
@@ -63,25 +77,90 @@ const Navbar = ({ currentUser, onLogout }) => {
                 <span>New Entry</span>
               </NavLink>
 
-              {/* User Info - Desktop */}
-              <div className="hidden md:flex items-center space-x-2 px-3 py-2">
-                <div className="w-8 h-8 bg-brand-primary/20 rounded-full flex items-center justify-center ring-2 ring-brand-primary/30">
-                  <span className="text-brand-primary font-semibold text-sm">
-                    {currentUser.name?.charAt(0).toUpperCase()}
-                  </span>
-                </div>
-                <span className="text-sm font-medium text-gray-700">{currentUser.name}</span>
-              </div>
-
-              {/* Logout Button - Desktop */}
-              <button
-                onClick={handleLogout}
-                className="hidden md:flex items-center space-x-2 px-4 py-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none"
-                aria-label="Sign out"
+              {/* User Dropdown - Desktop */}
+              <div 
+                className="hidden md:block relative"
+                onMouseEnter={() => setIsUserDropdownOpen(true)}
+                onMouseLeave={() => setIsUserDropdownOpen(false)}
               >
-                <LogOut className="w-5 h-5" />
-                <span>Sign out</span>
-              </button>
+                <button
+                  className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none"
+                  aria-label="User menu"
+                  aria-expanded={isUserDropdownOpen}
+                >
+                  <div className="w-8 h-8 bg-brand-primary/20 rounded-full flex items-center justify-center ring-2 ring-brand-primary/30">
+                    <span className="text-brand-primary font-semibold text-sm">
+                      {currentUser.name?.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <span className="text-sm font-medium text-gray-700">{currentUser.name}</span>
+                </button>
+
+                {/* Dropdown Menu */}
+                {isUserDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                    {/* User Info Header */}
+                    <div className="bg-gradient-to-r from-green-600 via-brand-primary to-brand-secondary p-4 text-white">
+                      <div className="flex items-center space-x-3 mb-3">
+                        <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center ring-2 ring-white/50">
+                          <span className="text-white font-bold text-lg">
+                            {currentUser.name?.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                        <div>
+                          <div className="font-semibold">{currentUser.name}</div>
+                          <div className="text-xs text-green-100">{currentUser.email}</div>
+                        </div>
+                      </div>
+                      
+                      {/* Quick Stats */}
+                      {userStats && (
+                        <div className="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-white/20">
+                          <div className="text-center">
+                            <div className="text-xl font-bold">{userStats.totalEntries || 0}</div>
+                            <div className="text-xs text-green-100">Entries</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-xl font-bold">{userStats.currentStreak || 0}</div>
+                            <div className="text-xs text-green-100">Day Streak</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-xl font-bold">{Math.floor((userStats.totalTimeSpent || 0) / 60)}</div>
+                            <div className="text-xs text-green-100">Minutes</div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Menu Items */}
+                    <div className="p-2">
+                      <NavLink
+                        to="/stats"
+                        className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-300 text-sm text-gray-700"
+                        onClick={() => setIsUserDropdownOpen(false)}
+                      >
+                        <BarChart2 className="w-4 h-4" />
+                        <span>Stats</span>
+                      </NavLink>
+                      <NavLink
+                        to="/settings"
+                        className="flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-300 text-sm text-gray-700"
+                        onClick={() => setIsUserDropdownOpen(false)}
+                      >
+                        <Settings className="w-4 h-4" />
+                        <span>Settings</span>
+                      </NavLink>
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-300 text-sm text-gray-700"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Sign out</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* Mobile menu button */}
               <button
@@ -146,6 +225,21 @@ const Navbar = ({ currentUser, onLogout }) => {
               <BookOpen className="w-5 h-5" />
               <span>Entries</span>
             </NavLink>
+
+            {/* Divider */}
+            <div className="border-t border-gray-200 my-2"></div>
+
+            {/* Stats Link */}
+            <NavLink
+              to="/stats"
+              className={navLinkClass}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              <BarChart2 className="w-5 h-5" />
+              <span>Stats</span>
+            </NavLink>
+
+            {/* Settings Link */}
             <NavLink
               to="/settings"
               className={navLinkClass}
@@ -154,6 +248,9 @@ const Navbar = ({ currentUser, onLogout }) => {
               <Settings className="w-5 h-5" />
               <span>Settings</span>
             </NavLink>
+
+            {/* Divider */}
+            <div className="border-t border-gray-200 my-2"></div>
 
             {/* New Entry Button */}
             <NavLink
