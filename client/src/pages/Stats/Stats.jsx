@@ -234,143 +234,148 @@ const Stats = ({ currentUser }) => {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-800">Your Statistics</h1>
-          <p className="text-gray-600 mt-1">Track your writing progress and achievements</p>
-        </div>
-        
-        {/* Timeframe selector */}
-        <div className="mt-4 md:mt-0 flex space-x-2">
-          <button
-            onClick={() => setTimeframe('week')}
-            className={`px-4 py-2 rounded-lg font-medium transition duration-200 ${
-              timeframe === 'week'
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            Week
-          </button>
-          <button
-            onClick={() => setTimeframe('month')}
-            className={`px-4 py-2 rounded-lg font-medium transition duration-200 ${
-              timeframe === 'month'
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            Month
-          </button>
-          <button
-            onClick={() => setTimeframe('all')}
-            className={`px-4 py-2 rounded-lg font-medium transition duration-200 ${
-              timeframe === 'all'
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            All Time
-          </button>
-        </div>
-      </div>
-
-      {/* Overview Stats */}
-      <div>
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Overview</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-blue-500">
-            <div className="text-3xl font-bold text-gray-800">{formatNumber(stats?.totalEntries)}</div>
-            <div className="text-gray-600 text-sm mt-1">Total Entries</div>
-            <div className="text-xs text-gray-500 mt-2">All your written entries</div>
-          </div>
-          
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-green-500">
-            <div className="text-3xl font-bold text-gray-800">{streakData?.currentStreak || 0}</div>
-            <div className="text-gray-600 text-sm mt-1">Current Streak 🔥</div>
-            <div className="text-xs text-gray-500 mt-2">Days in a row writing</div>
-          </div>
-          
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-purple-500">
-            <div className="text-3xl font-bold text-gray-800">{stats?.uniquePrompts || 0}</div>
-            <div className="text-gray-600 text-sm mt-1">Unique Prompts</div>
-            <div className="text-xs text-gray-500 mt-2">Different prompts used</div>
-          </div>
-          
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-orange-500">
-            <div className="text-3xl font-bold text-gray-800">{formatNumber(stats?.totalWords)}</div>
-            <div className="text-gray-600 text-sm mt-1">Total Words Written</div>
-            <div className="text-xs text-gray-500 mt-2">Across all entries</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Writing Metrics */}
-      <div>
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Writing Metrics</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-teal-500">
-            <div className="text-3xl font-bold text-gray-800">{stats?.averageWords || 0}</div>
-            <div className="text-gray-600 text-sm mt-1">Avg Words Per Entry</div>
-            <div className="text-xs text-gray-500 mt-2">Your typical entry length</div>
-          </div>
-          
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-indigo-500">
-            <div className="text-3xl font-bold text-gray-800">{streakData?.longestStreak || 0}</div>
-            <div className="text-gray-600 text-sm mt-1">Longest Streak</div>
-            <div className="text-xs text-gray-500 mt-2">Your best consistency</div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-pink-500">
-            <div className="text-3xl font-bold text-gray-800">
-              {stats?.totalEntries > 0 ? Math.round((stats?.uniquePrompts / stats?.totalEntries) * 100) : 0}%
+      {/* User Profile Header */}
+      <div className="bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 rounded-2xl shadow-xl overflow-hidden">
+        <div className="p-8">
+          <div className="flex flex-col md:flex-row items-center md:items-start space-y-4 md:space-y-0 md:space-x-6">
+            {/* Avatar */}
+            <div className="relative">
+              <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center text-6xl font-bold text-purple-600 shadow-lg border-4 border-white">
+                {currentUser?.name?.charAt(0).toUpperCase() || 'U'}
+              </div>
+              <div className="absolute -bottom-2 -right-2 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg border-2 border-white">
+                Level {Math.floor((stats?.totalEntries || 0) / 10) + 1}
+              </div>
             </div>
-            <div className="text-gray-600 text-sm mt-1">Prompt Variety</div>
-            <div className="text-xs text-gray-500 mt-2">Diversity in your writing</div>
+            
+            {/* Profile Info */}
+            <div className="flex-1 text-center md:text-left text-white">
+              <h1 className="text-4xl font-bold mb-2">{currentUser?.name || 'User'}</h1>
+              <p className="text-blue-100 text-lg mb-3">{currentUser?.email || ''}</p>
+              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 mb-3">
+                <p className="text-white/95 italic">
+                  {currentUser?.bio || '"Every word written is a step towards self-discovery. Keep writing, keep growing."'}
+                </p>
+              </div>
+              <div className="flex flex-wrap justify-center md:justify-start gap-3">
+                <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
+                  <span className="text-sm">📅 Joined {new Date(currentUser?.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
+                </div>
+                <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
+                  <span className="text-sm">🔥 {streakData?.currentStreak || 0} Day Streak</span>
+                </div>
+                <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
+                  <span className="text-sm">🏆 {completedCount} Achievements</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Streak Information */}
+      {/* Top Achievements */}
       <div>
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Streak Details</h2>
-        <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-xl shadow-sm p-8 border border-orange-200">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+          <span className="mr-2">🏆</span>
+          Top Achievements
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {sortedAchievements.filter(a => a.condition()).slice(0, 6).map(achievement => (
+            <div 
+              key={achievement.id}
+              className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl shadow-md p-6 border-2 border-amber-200 hover:shadow-lg transition-all duration-300"
+            >
+              <div className="text-5xl mb-3 text-center">{achievement.emoji}</div>
+              <div className="font-bold text-gray-800 text-center mb-1">{achievement.title}</div>
+              <div className="text-sm text-gray-600 text-center">{achievement.description}</div>
+              <div className="mt-3 flex justify-center">
+                <div className="flex items-center text-xs text-green-600 font-medium bg-green-100 px-3 py-1 rounded-full">
+                  <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  Unlocked!
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        {sortedAchievements.filter(a => a.condition()).length === 0 && (
+          <div className="bg-gray-50 rounded-xl p-8 text-center border-2 border-dashed border-gray-300">
+            <div className="text-4xl mb-3">🎯</div>
+            <p className="text-gray-600">Start writing to unlock achievements!</p>
+          </div>
+        )}
+      </div>
+
+      {/* Writing Stats Overview */}
+      <div>
+        <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+          <span className="mr-2">📊</span>
+          Writing Statistics
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-blue-500 hover:shadow-md transition-shadow">
+            <div className="text-4xl font-bold text-blue-600">{formatNumber(stats?.totalEntries)}</div>
+            <div className="text-gray-600 text-sm mt-1 font-medium">Total Entries</div>
+          </div>
+          
+          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-green-500 hover:shadow-md transition-shadow">
+            <div className="text-4xl font-bold text-green-600">{streakData?.longestStreak || 0}</div>
+            <div className="text-gray-600 text-sm mt-1 font-medium">Longest Streak</div>
+          </div>
+          
+          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-purple-500 hover:shadow-md transition-shadow">
+            <div className="text-4xl font-bold text-purple-600">{formatNumber(stats?.totalWords)}</div>
+            <div className="text-gray-600 text-sm mt-1 font-medium">Total Words</div>
+          </div>
+          
+          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-orange-500 hover:shadow-md transition-shadow">
+            <div className="text-4xl font-bold text-orange-600">{stats?.averageWords || 0}</div>
+            <div className="text-gray-600 text-sm mt-1 font-medium">Avg Words</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Current Streak Card */}
+      <div>
+        <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+          <span className="mr-2">🔥</span>
+          Current Streak
+        </h2>
+        <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-xl shadow-md p-6 border-2 border-orange-200">
+          <div className="flex flex-col md:flex-row items-center justify-around gap-6">
             <div className="text-center">
+              <div className="text-7xl mb-2">🔥</div>
               <div className="text-5xl font-bold text-orange-600 mb-2">
                 {streakData?.currentStreak || 0}
               </div>
-              <div className="text-gray-700 font-medium">Current Streak</div>
+              <div className="text-gray-700 font-medium text-lg">Days</div>
               <div className="text-sm text-gray-600 mt-1">
                 {streakData?.writtenToday ? '✅ Written today!' : '⏰ Write today to continue'}
               </div>
             </div>
             
+            <div className="hidden md:block w-px h-24 bg-orange-300"></div>
+            
             <div className="text-center">
-              <div className="text-5xl font-bold text-red-600 mb-2">
+              <div className="text-sm text-gray-600 mb-2">Personal Best</div>
+              <div className="text-4xl font-bold text-red-600 mb-1">
                 {streakData?.longestStreak || 0}
               </div>
               <div className="text-gray-700 font-medium">Longest Streak</div>
-              <div className="text-sm text-gray-600 mt-1">Your personal best</div>
-            </div>
-            
-            <div className="text-center">
-              <div className="text-5xl font-bold text-amber-600 mb-2">
-                {stats?.totalEntries || 0}
-              </div>
-              <div className="text-gray-700 font-medium">Total Days Written</div>
-              <div className="text-sm text-gray-600 mt-1">Lifetime count</div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Achievements */}
+      {/* All Achievements */}
       <div>
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-gray-800">Achievements</h2>
-          <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-lg font-bold">
+          <h2 className="text-2xl font-bold text-gray-800 flex items-center">
+            <span className="mr-2">🎯</span>
+            All Achievements
+          </h2>
+          <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-5 py-2 rounded-lg font-bold shadow-lg">
             {completedCount}/{achievements.length} Unlocked
           </div>
         </div>

@@ -3,17 +3,15 @@ import { Link } from 'react-router-dom';
 import entryService from '../../services/entryService.js';
 import streakService from '../../services/streakService.js';
 import promptService from '../../services/promptService.js';
-import EntryCard from '../../components/Entries/EntryCard.jsx';
 import StreakDisplay from '../../components/Streak/StreakDisplay.jsx';
 import DailyPrompt from '../../components/Prompts/DailyPrompt.jsx';
-import TimerWidget from '../../components/Timer/TimerWidget.jsx';
 
 const Dashboard = ({ currentUser }) => {
-  const [recentEntries, setRecentEntries] = useState([]);
   const [streakData, setStreakData] = useState(null);
   const [promptData, setPromptData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState(null);
+  const [showAbout, setShowAbout] = useState(false);
 
   useEffect(() => {
     loadDashboardData();
@@ -22,10 +20,6 @@ const Dashboard = ({ currentUser }) => {
   const loadDashboardData = async () => {
     try {
       setLoading(true);
-      
-      // Load recent entries
-      const entriesResult = await entryService.getEntries({ limit: 5 });
-      setRecentEntries(entriesResult.data?.data || []); // data.data is the array
 
       // Load streak data (streakService already returns response.data)
       const streakResult = await streakService.getStreak();
@@ -43,19 +37,6 @@ const Dashboard = ({ currentUser }) => {
       console.error('Error loading dashboard data:', error);
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleEntryDelete = async (entry) => {
-    if (window.confirm('Are you sure you want to delete this entry?')) {
-      try {
-        await entryService.deleteEntry(entry.id);
-        setRecentEntries(prev => prev.filter(e => e.id !== entry.id));
-        loadDashboardData(); // Refresh stats and streak
-      } catch (error) {
-        console.error('Error deleting entry:', error);
-        alert('Failed to delete entry');
-      }
     }
   };
 
@@ -95,33 +76,51 @@ const Dashboard = ({ currentUser }) => {
 
   return (
     <div className="space-y-6">
-      {/* Application Objective Banner */}
-      <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-2xl shadow-lg text-white p-6">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold mb-4 text-center">✨ About Promptly ✨</h2>
-          <ul className="space-y-2 text-white/95 text-base">
-            <li className="flex items-start">
-              <span className="mr-3 text-xl">✍️</span>
-              <span>Helps you build a consistent writing habit.</span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-3 text-xl">📝</span>
-              <span>Lets you track daily thoughts and respond to prompts.</span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-3 text-xl">🔥</span>
-              <span>Maintains writing streaks to reinforce continuity.</span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-3 text-xl">🌱</span>
-              <span>Supports mindfulness, creativity, and personal growth.</span>
-            </li>
-            <li className="flex items-start">
-              <span className="mr-3 text-xl">💡</span>
-              <span>Provides daily prompts and streak tracking.</span>
-            </li>
-          </ul>
-        </div>
+      {/* Application Objective Banner - Collapsible */}
+      <div>
+        <button
+          onClick={() => setShowAbout(!showAbout)}
+          className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-xl shadow-lg text-white p-4 hover:opacity-90 transition duration-200 flex items-center justify-between"
+        >
+          <div className="flex items-center">
+            <span className="text-xl mr-2">✨</span>
+            <h2 className="text-lg font-bold">About Promptly</h2>
+          </div>
+          <svg
+            className={`w-5 h-5 transition-transform duration-200 ${showAbout ? 'transform rotate-180' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        {showAbout && (
+          <div className="mt-2 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 rounded-xl shadow-sm p-6 border border-purple-200">
+            <ul className="space-y-2 text-gray-700 text-base">
+              <li className="flex items-start">
+                <span className="mr-3 text-xl">✍️</span>
+                <span>Helps you build a consistent writing habit.</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-3 text-xl">📝</span>
+                <span>Lets you track daily thoughts and respond to prompts.</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-3 text-xl">🔥</span>
+                <span>Maintains writing streaks to reinforce continuity.</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-3 text-xl">🌱</span>
+                <span>Supports mindfulness, creativity, and personal growth.</span>
+              </li>
+              <li className="flex items-start">
+                <span className="mr-3 text-xl">💡</span>
+                <span>Provides daily prompts and streak tracking.</span>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
 
       {/* Welcome Header */}
@@ -159,45 +158,6 @@ const Dashboard = ({ currentUser }) => {
           onPromptCompleted={handlePromptCompleted}
           compact={false}
         />
-      </div>
-
-      {/* Recent Entries */}
-      <div>
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-gray-800">Recent Entries</h2>
-          <Link
-            to="/entries"
-            className="text-blue-500 hover:text-blue-700 font-medium"
-          >
-            View all →
-          </Link>
-        </div>
-
-        {recentEntries.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-sm p-8 text-center">
-            <div className="text-6xl mb-4">📝</div>
-            <h3 className="text-lg font-semibold text-gray-700 mb-2">No entries yet</h3>
-            <p className="text-gray-500 mb-4">Start your writing journey with your first entry!</p>
-            <Link
-              to="/entries/new"
-              className="bg-blue-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 transition duration-200"
-            >
-              Write First Entry
-            </Link>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            {recentEntries.map(entry => (
-              <EntryCard
-                key={entry.id}
-                entry={entry}
-                onEdit={() => window.location.href = `/entries/${entry.id}/edit`}
-                onDelete={handleEntryDelete}
-                onView={() => window.location.href = `/entries/${entry.id}`}
-              />
-            ))}
-          </div>
-        )}
       </div>
     </div>
   );
