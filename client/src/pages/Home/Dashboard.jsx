@@ -13,6 +13,36 @@ const Dashboard = ({ currentUser }) => {
   const [stats, setStats] = useState(null);
   const [showAbout, setShowAbout] = useState(false);
 
+  // Dynamic greeting based on time of day
+  const getTimeBasedGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good Morning';
+    if (hour < 17) return 'Good Afternoon';
+    if (hour < 21) return 'Good Evening';
+    return 'Good Night';
+  };
+
+  // Dynamic message based on streak and activity
+  const getMotivationalMessage = () => {
+    if (!streakData) return "Ready to capture your thoughts today?";
+    
+    if (streakData.writtenToday) {
+      const messages = [
+        "Excellent work! You've written today. Keep the momentum going! 🔥",
+        "Amazing! Another day, another entry. You're on fire! 🔥",
+        "Well done! Your dedication is inspiring! 💪",
+        "Fantastic! You're building a powerful writing habit! ⭐"
+      ];
+      return messages[Math.floor(Math.random() * messages.length)];
+    }
+    
+    if (streakData.currentStreak > 0) {
+      return `You're on a ${streakData.currentStreak} day streak! Don't break it now! 🔥`;
+    }
+    
+    return "Ready to start your writing journey today? ✍️";
+  };
+
   useEffect(() => {
     document.title = 'Dashboard - Promptly';
     loadDashboardData();
@@ -81,7 +111,9 @@ const Dashboard = ({ currentUser }) => {
       <div>
         <button
           onClick={() => setShowAbout(!showAbout)}
-          className="w-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-xl shadow-lg text-white p-4 hover:opacity-90 transition duration-200 flex items-center justify-between"
+          className="w-full bg-gradient-to-r from-green-500 via-brand-primary to-brand-secondary rounded-xl shadow-lg text-white p-4 hover:opacity-90 transition-all duration-300 flex items-center justify-between focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none"
+          aria-label={showAbout ? "Hide about Promptly" : "Show about Promptly"}
+          aria-expanded={showAbout}
         >
           <div className="flex items-center">
             <span className="text-xl mr-2">✨</span>
@@ -97,7 +129,7 @@ const Dashboard = ({ currentUser }) => {
           </svg>
         </button>
         {showAbout && (
-          <div className="mt-2 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 rounded-xl shadow-sm p-6 border border-purple-200">
+          <div className="mt-2 bg-gradient-to-r from-green-50 via-brand-accent-1 to-green-100 rounded-xl shadow-sm p-6 border border-brand-primary/30">
             <ul className="space-y-2 text-gray-700 text-base">
               <li className="flex items-start">
                 <span className="mr-3 text-xl">✍️</span>
@@ -125,17 +157,14 @@ const Dashboard = ({ currentUser }) => {
       </div>
 
       {/* Welcome Header */}
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl shadow-lg text-white p-8">
+      <div className="bg-gradient-to-r from-green-600 via-brand-primary to-brand-secondary rounded-2xl shadow-lg text-white p-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
           <div>
             <h1 className="text-3xl font-bold mb-2">
-              Welcome Back, {currentUser.name}! 👋
+              {getTimeBasedGreeting()}, {currentUser.name}! 👋
             </h1>
-            <p className="text-blue-100 text-lg">
-              {streakData?.writtenToday 
-                ? "Excellent work! You've written today. Keep the momentum going! 🔥"
-                : "Ready to capture your thoughts today?"
-              }
+            <p className="text-green-100 text-lg">
+              {getMotivationalMessage()}
             </p>
           </div>
           <Link
