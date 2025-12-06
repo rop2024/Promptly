@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { getRandomPrompts } from '../../config/stuckPrompts.js';
+import authService from '../../services/authService.js';
 
 const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' }) => {
   const [formData, setFormData] = useState({
@@ -12,6 +14,20 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
   const [timeSpent, setTimeSpent] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [startTime, setStartTime] = useState(null);
+
+  // Stuck prompts state
+  const [stuckEnabled, setStuckEnabled] = useState(true); // Initialize from settings
+  const [shuffleList, setShuffleList] = useState([]);
+  const [promptIndex, setPromptIndex] = useState(0);
+  const [ghostParagraphId, setGhostParagraphId] = useState(null);
+  const [lastTypedAt, setLastTypedAt] = useState(Date.now());
+  
+  // Get user level from current user
+  const currentUser = authService.getCurrentUser();
+  const level = currentUser?.level || 1;
+  
+  // Use ref to track if we've initialized the shuffle list
+  const isInitialized = useRef(false);
 
   useEffect(() => {
     if (entry) {
@@ -48,12 +64,35 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
     }
   }, [formData.content]);
 
+  // Initialize and shuffle stuck prompts pool once per session
+  useEffect(() => {
+    if (!isInitialized.current && stuckEnabled) {
+      const initialPrompts = getRandomPrompts(14); // Get all prompts shuffled
+      setShuffleList(initialPrompts);
+      isInitialized.current = true;
+    }
+  }, [stuckEnabled]);
+
+  // Re-shuffle when we've cycled through all prompts
+  useEffect(() => {
+    if (promptIndex >= shuffleList.length && shuffleList.length > 0) {
+      const newPrompts = getRandomPrompts(14);
+      setShuffleList(newPrompts);
+      setPromptIndex(0);
+    }
+  }, [promptIndex, shuffleList.length]);
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+    
+    // Update last typed timestamp for stuck prompts
+    if (name === 'content') {
+      setLastTypedAt(Date.now());
+    }
     
     // Clear error when user starts typing
     if (errors[name]) {
