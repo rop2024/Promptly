@@ -19,7 +19,12 @@ import Stats from './pages/Stats/Stats.jsx';
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
   const currentUser = authService.getCurrentUser();
-  return currentUser ? children : <Navigate to="/login" replace />;
+  
+  if (!currentUser) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return <>{children}</>;
 };
 
 function App() {

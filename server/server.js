@@ -56,6 +56,8 @@ app.get('/health', (req, res) => {
 // Error handling middleware (must be after routes)
 app.use(errorHandler);
 
-app.listen(PORT, () => {
+// Bind to 0.0.0.0 for Render.com deployment
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  console.log(`Server is listening on 0.0.0.0:${PORT}`);
 });
