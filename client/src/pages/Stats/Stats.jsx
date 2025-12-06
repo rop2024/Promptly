@@ -266,15 +266,11 @@ const Stats = ({ currentUser }) => {
                   <span className="text-sm font-medium">Level {stats?.level || 1}</span>
                   <span className="text-sm">{formatNumber(stats?.xpInCurrentLevel || 0)} / {formatNumber(stats?.xpNeededForNextLevel || 100)} XP</span>
                 </div>
-                <div className="w-full bg-white/30 rounded-full h-3 overflow-hidden">
+                <div className="w-full bg-white/30 rounded-full h-4 overflow-hidden">
                   <div 
-                    className="bg-gradient-to-r from-yellow-400 to-amber-500 h-3 rounded-full transition-all duration-500 flex items-center justify-end pr-1"
+                    className="bg-gradient-to-r from-yellow-400 to-brand-accent-2 h-4 rounded-full transition-all duration-500"
                     style={{ width: `${stats?.progressPercentage || 0}%` }}
-                  >
-                    {stats?.progressPercentage > 10 && (
-                      <span className="text-xs font-bold text-white drop-shadow">{stats?.progressPercentage}%</span>
-                    )}
-                  </div>
+                  />
                 </div>
                 <div className="text-xs text-white/80 mt-1">
                   {stats?.xpNeededForNextLevel - stats?.xpInCurrentLevel || 0} XP to Level {(stats?.level || 1) + 1}
@@ -310,13 +306,13 @@ const Stats = ({ currentUser }) => {
           {sortedAchievements.filter(a => a.condition()).slice(0, 6).map(achievement => (
             <div 
               key={achievement.id}
-              className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl shadow-md p-6 border-2 border-amber-200 hover:shadow-lg transition-all duration-300"
+              className="bg-gradient-to-br from-brand-accent-1 to-brand-accent-2/30 rounded-lg shadow-soft p-6 border border-brand-primary/20 hover:shadow-soft2 hover:scale-105 transition-all duration-300"
             >
               <div className="text-5xl mb-3 text-center">{achievement.emoji}</div>
               <div className="font-bold text-gray-800 text-center mb-1">{achievement.title}</div>
               <div className="text-sm text-gray-600 text-center">{achievement.description}</div>
               <div className="mt-3 flex justify-center">
-                <div className="flex items-center text-xs text-green-600 font-medium bg-green-100 px-3 py-1 rounded-full">
+                <div className="flex items-center text-xs text-brand-primary font-medium bg-white/50 px-3 py-1 rounded-full border border-brand-primary/20">
                   <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
@@ -341,22 +337,22 @@ const Stats = ({ currentUser }) => {
           Writing Statistics
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-blue-500 hover:shadow-md transition-shadow">
+          <div className="bg-white rounded-xl shadow-soft p-6 border-l-4 border-blue-500 hover:shadow-soft2 hover:scale-105 transition-all duration-300">
             <div className="text-4xl font-bold text-blue-600">{formatNumber(stats?.totalEntries)}</div>
             <div className="text-gray-600 text-sm mt-1 font-medium">Total Entries</div>
           </div>
           
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-green-500 hover:shadow-md transition-shadow">
+          <div className="bg-white rounded-xl shadow-soft p-6 border-l-4 border-green-500 hover:shadow-soft2 hover:scale-105 transition-all duration-300">
             <div className="text-4xl font-bold text-green-600">{streakData?.longestStreak || 0}</div>
             <div className="text-gray-600 text-sm mt-1 font-medium">Longest Streak</div>
           </div>
           
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-purple-500 hover:shadow-md transition-shadow">
+          <div className="bg-white rounded-xl shadow-soft p-6 border-l-4 border-purple-500 hover:shadow-soft2 hover:scale-105 transition-all duration-300">
             <div className="text-4xl font-bold text-purple-600">{formatNumber(stats?.totalWords)}</div>
             <div className="text-gray-600 text-sm mt-1 font-medium">Total Words</div>
           </div>
           
-          <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-orange-500 hover:shadow-md transition-shadow">
+          <div className="bg-white rounded-xl shadow-soft p-6 border-l-4 border-orange-500 hover:shadow-soft2 hover:scale-105 transition-all duration-300">
             <div className="text-4xl font-bold text-orange-600">{stats?.averageWords || 0}</div>
             <div className="text-gray-600 text-sm mt-1 font-medium">Avg Words</div>
           </div>
@@ -399,7 +395,7 @@ const Stats = ({ currentUser }) => {
       <div>
         <button
           onClick={() => setShowAllAchievements(!showAllAchievements)}
-          className="w-full bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-4 border-2 border-indigo-200 hover:border-indigo-300 transition duration-200 flex items-center justify-between mb-4"
+          className="w-full bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-4 border-2 border-indigo-200 hover:border-indigo-300 transition-all duration-300 flex items-center justify-between mb-4"
         >
           <div className="flex items-center">
             <span className="text-2xl mr-3">🎯</span>
@@ -409,7 +405,7 @@ const Stats = ({ currentUser }) => {
             </div>
           </div>
           <svg
-            className={`w-6 h-6 text-gray-600 transition-transform duration-200 ${showAllAchievements ? 'transform rotate-180' : ''}`}
+            className={`w-6 h-6 text-gray-600 transition-transform duration-300 ${showAllAchievements ? 'transform rotate-180' : ''}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -427,10 +423,10 @@ const Stats = ({ currentUser }) => {
             return (
               <div 
                 key={achievement.id}
-                className={`bg-white rounded-xl shadow-sm p-6 border-2 transition-all duration-300 ${
+                className={`rounded-lg shadow-soft p-6 border transition-all duration-300 ${
                   isCompleted 
-                    ? 'border-green-500 transform hover:scale-105' 
-                    : 'border-gray-200 hover:border-gray-300'
+                    ? 'bg-gradient-to-br from-brand-accent-1 to-brand-accent-2/30 border-brand-primary/20 hover:shadow-soft2 hover:scale-105' 
+                    : 'bg-gray-50 border-gray-200 hover:border-gray-300'
                 }`}
               >
                 <div className={`text-4xl mb-2 ${!isCompleted && 'grayscale opacity-50'}`}>
@@ -444,7 +440,7 @@ const Stats = ({ currentUser }) => {
                 </div>
                 
                 {isCompleted ? (
-                  <div className="flex items-center text-xs text-green-600 font-medium bg-green-50 px-3 py-1 rounded-full">
+                  <div className="flex items-center text-xs text-brand-primary font-medium bg-white/50 px-3 py-1 rounded-full border border-brand-primary/20">
                     <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
@@ -456,9 +452,9 @@ const Stats = ({ currentUser }) => {
                       <span>Progress</span>
                       <span className="font-medium">{achievement.progressText()}</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className="w-full bg-white/30 rounded-full h-4 overflow-hidden">
                       <div 
-                        className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full transition-all duration-500"
+                        className="bg-gradient-to-r from-yellow-400 to-brand-accent-2 h-4 rounded-full transition-all duration-500"
                         style={{ width: `${progress}%` }}
                       />
                     </div>

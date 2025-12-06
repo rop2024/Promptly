@@ -94,7 +94,7 @@ const EntryDetail = () => {
         <p className="text-gray-600 mb-6">The entry you're looking for doesn't exist or has been deleted.</p>
         <Link
           to="/entries"
-          className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-200 font-medium"
+          className="bg-brand-primary text-white px-6 py-3 rounded-lg hover:bg-brand-secondary transition-all duration-300 hover:scale-105 font-medium"
         >
           Back to Entries
         </Link>
@@ -108,7 +108,7 @@ const EntryDetail = () => {
       <div className="mb-6">
         <Link
           to="/entries"
-          className="inline-flex items-center text-gray-600 hover:text-gray-800 transition duration-200"
+          className="inline-flex items-center text-gray-600 hover:text-gray-800 transition-all duration-300"
         >
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />

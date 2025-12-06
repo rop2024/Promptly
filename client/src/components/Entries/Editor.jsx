@@ -488,7 +488,7 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
           
           {/* Time Recorder with Hover Controls */}
           <div className="group relative">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-3 rounded-xl border-2 border-blue-200 hover:border-blue-300 transition-all duration-200 cursor-pointer">
+            <div className="bg-gradient-to-r from-brand-accent-1 to-green-50 px-5 py-3 rounded-xl border-2 border-brand-primary/30 hover:border-brand-primary/50 transition-all duration-300 cursor-pointer hover:shadow-soft">
               <div className="flex items-center space-x-3">
                 <div className={`p-2 rounded-lg ${
                   isActive ? 'bg-green-100' : 'bg-gray-100'
@@ -507,12 +507,12 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
             </div>
             
             {/* Hover Controls */}
-            <div className="absolute top-full right-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+            <div className="absolute top-full right-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10">
               <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-2 flex space-x-2">
                 <button
                   type="button"
                   onClick={assistPrompt}
-                  className="assist-btn px-4 py-2 rounded-lg font-medium transition duration-200 flex items-center space-x-2 bg-purple-100 text-purple-700 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                  className="assist-btn px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 bg-purple-100 text-purple-700 hover:bg-purple-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
                   aria-label="Insert writing prompt at cursor position"
                   aria-pressed="false"
                   tabIndex={0}
@@ -525,7 +525,7 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
                 <button
                   type="button"
                   onClick={() => setIsActive(!isActive)}
-                  className={`px-4 py-2 rounded-lg font-medium transition duration-200 flex items-center space-x-2 ${
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105 ${
                     isActive 
                       ? 'bg-orange-100 text-orange-700 hover:bg-orange-200'
                       : 'bg-green-100 text-green-700 hover:bg-green-200'
@@ -626,7 +626,7 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ${
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300 ${
                   errors.title ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="Give your entry a title (optional)"
@@ -677,13 +677,13 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
                   onKeyDown={handleTagInput}
                   placeholder="Type a tag and press Enter (max 10)"
                   disabled={formData.tags.length >= 10}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed"
                 />
                 <button
                   type="button"
                   onClick={addTag}
                   disabled={!tagInput.trim() || formData.tags.length >= 10}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed transition duration-200 font-medium"
+                  className="px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105 font-medium"
                 >
                   Add
                 </button>
