@@ -66,6 +66,17 @@ const authService = {
       localStorage.setItem(storageTokenKey, res.data.token);
     }
     return res;
+  },
+
+  updatePreferences: async (preferences) => {
+    const res = await api.put('/users/preferences', preferences);
+    if (res.data?.data) {
+      // Update local storage with new user data
+      const currentUser = authService.getCurrentUser();
+      const updatedUser = { ...currentUser, ...res.data.data };
+      localStorage.setItem(storageUserKey, JSON.stringify(updatedUser));
+    }
+    return res;
   }
 };
 

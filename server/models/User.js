@@ -87,6 +87,10 @@ const userSchema = new mongoose.Schema({
     timezone: {
       type: String,
       default: 'UTC'
+    },
+    stuckPromptEnabled: {
+      type: Boolean,
+      default: true
     }
   },
   streakHistory: [{

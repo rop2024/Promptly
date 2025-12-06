@@ -11,6 +11,7 @@ import apiRoutes from './routes/api.js';
 import entryRoutes from './routes/entries.js';
 import promptRoutes from './routes/prompts.js';
 import streakRoutes from './routes/streak.js';
+import analyticsRoutes from './routes/analytics.js';
 
 // Load env vars
 dotenv.config();
@@ -38,6 +39,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/entries', entryRoutes);
 app.use('/api/prompts', promptRoutes);
 app.use('/api/streak', streakRoutes);
+app.use('/api/analytics', analyticsRoutes);
 // Mount public API routes last so they don't override specific routes
 app.use('/api', apiRoutes);
 

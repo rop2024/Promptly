@@ -38,6 +38,7 @@ const Settings = () => {
       'mindfulness'
     ],
     promptTime: 'morning',
+    stuckPromptEnabled: true,
     notifications: {
       dailyReminder: true,
       weeklySummary: true,
@@ -79,6 +80,16 @@ const Settings = () => {
         name: user.name || '',
         email: user.email || ''
       }));
+      
+      // Load user preferences including stuckPromptEnabled
+      if (user.preferences) {
+        setPreferences(prev => ({
+          ...prev,
+          promptCategories: user.preferences.promptCategories || prev.promptCategories,
+          promptTime: user.preferences.promptTime || prev.promptTime,
+          stuckPromptEnabled: user.preferences.stuckPromptEnabled ?? true
+        }));
+      }
     }
   };
 
@@ -177,12 +188,21 @@ const Settings = () => {
     setMessage({ type: '', text: '' });
 
     try {
+      // Update prompt categories and time via promptService
       await promptService.updatePreferences({
         promptCategories: preferences.promptCategories,
         promptTime: preferences.promptTime
       });
+      
+      // Update stuckPromptEnabled via authService
+      await authService.updatePreferences({
+        stuckPromptEnabled: preferences.stuckPromptEnabled
+      });
 
       setMessage({ type: 'success', text: 'Preferences updated successfully!' });
+      
+      // Force refresh of user data
+      window.dispatchEvent(new Event('userUpdated'));
 
     } catch (error) {
       console.error('Error updating preferences:', error);
@@ -597,6 +617,71 @@ const Settings = () => {
                         </div>
                       </label>
                     ))}
+                  </div>
+                </div>
+
+                {/* Writing Assistance */}
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Writing Assistance</h3>
+                  <p className="text-gray-600 mb-4">Smart features to help you write</p>
+                  
+                  <div className="space-y-4">
+                    <label className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition duration-200">
+                      <div>
+                        <div className="font-medium text-gray-800 flex items-center space-x-2">
+                          <span>💡 Enable Suggestion Prompts</span>
+                        </div>
+                        <div className="text-sm text-gray-600 mt-1">
+                          Get helpful writing prompts when you pause while writing
+                        </div>
+                      </div>
+                      <div className="relative inline-block w-12 align-middle select-none">
+                        <input
+                          type="checkbox"
+                          checked={preferences.stuckPromptEnabled}
+                          onChange={() => setPreferences(prev => ({
+                            ...prev,
+                            stuckPromptEnabled: !prev.stuckPromptEnabled
+                          }))}
+                          className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer transition-transform duration-200 ease-in-out"
+                          style={{
+                            right: preferences.stuckPromptEnabled ? '0' : '24px'
+                          }}
+                        />
+                        <label
+                          className={`toggle-label block overflow-hidden h-6 rounded-full cursor-pointer transition-colors duration-200 ${
+                            preferences.stuckPromptEnabled ? 'bg-blue-500' : 'bg-gray-300'
+                          }`}
+                        />
+                      </div>
+                    </label>
+                    
+                    {preferences.stuckPromptEnabled && (
+                      <div className="ml-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="font-medium text-blue-800 text-sm mb-1">
+                              🔄 Reset Prompt Cycle
+                            </div>
+                            <div className="text-xs text-blue-700">
+                              Reshuffle the prompt pool to get fresh suggestions (power user feature)
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              // Trigger a custom event that Editor can listen to
+                              window.dispatchEvent(new Event('resetPromptCycle'));
+                              setMessage({ type: 'success', text: 'Prompt cycle reset! You\'ll get new suggestions.' });
+                              setTimeout(() => setMessage({ type: '', text: '' }), 3000);
+                            }}
+                            className="ml-4 px-3 py-1.5 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition duration-200 font-medium whitespace-nowrap"
+                          >
+                            Reset Now
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
 

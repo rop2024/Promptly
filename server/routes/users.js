@@ -44,6 +44,45 @@ router.get('/:id', protect, authorize('admin'), async (req, res, next) => {
   }
 });
 
+// @desc    Update user preferences
+// @route   PUT /api/users/preferences
+// @access  Private
+router.put('/preferences', protect, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'User not found'
+      });
+    }
+
+    // Update only allowed preference fields
+    const allowedUpdates = ['promptCategories', 'promptTime', 'timezone', 'stuckPromptEnabled'];
+    const updates = {};
+    
+    Object.keys(req.body).forEach(key => {
+      if (allowedUpdates.includes(key)) {
+        updates[`preferences.${key}`] = req.body[key];
+      }
+    });
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      { $set: updates },
+      { new: true, runValidators: true }
+    ).select('-password');
+    
+    res.status(200).json({
+      success: true,
+      data: updatedUser
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // @desc    Delete user
 // @route   DELETE /api/users/:id
 // @access  Private/Admin
