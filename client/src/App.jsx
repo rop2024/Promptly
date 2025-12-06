@@ -14,6 +14,7 @@ import EntryDetail from './pages/Entries/EntryDetail.jsx';
 import EntryEdit from './pages/Entries/EntryEdit.jsx';
 import EntryNew from './pages/Entries/EntryNew.jsx';
 import Settings from './pages/Settings/Settings.jsx';
+import Stats from './pages/Stats/Stats.jsx';
 
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
@@ -151,6 +152,17 @@ function App() {
               <ProtectedRoute>
                 <Layout currentUser={currentUser} onLogout={handleLogout}>
                   <Settings />
+                </Layout>
+              </ProtectedRoute>
+            } 
+          />
+          
+          <Route 
+            path="/stats" 
+            element={
+              <ProtectedRoute>
+                <Layout currentUser={currentUser} onLogout={handleLogout}>
+                  <Stats currentUser={currentUser} />
                 </Layout>
               </ProtectedRoute>
             } 

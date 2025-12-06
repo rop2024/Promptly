@@ -146,48 +146,37 @@ const Dashboard = ({ currentUser }) => {
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-blue-500">
-          <div className="text-2xl font-bold text-gray-800">{stats?.totalEntries || 0}</div>
-          <div className="text-gray-600 text-sm">Total Entries</div>
+      {/* Quick Stats Summary */}
+      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl shadow-sm p-6 border border-indigo-200">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-gray-800">Quick Stats</h2>
+          <Link
+            to="/stats"
+            className="text-indigo-600 hover:text-indigo-800 font-medium text-sm flex items-center"
+          >
+            View All Stats
+            <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
         </div>
-        
-        <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-green-500">
-          <div className="text-2xl font-bold text-gray-800">{streakData?.currentStreak || 0}</div>
-          <div className="text-gray-600 text-sm">Current Streak 🔥</div>
-        </div>
-        
-        <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-purple-500">
-          <div className="text-2xl font-bold text-gray-800">{stats?.uniquePrompts || 0}</div>
-          <div className="text-gray-600 text-sm">Unique Prompts</div>
-        </div>
-        
-        <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-orange-500">
-          <div className="text-2xl font-bold text-gray-800">
-            {stats?.totalWords ? stats.totalWords.toLocaleString() : 0}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-indigo-600">{stats?.totalEntries || 0}</div>
+            <div className="text-xs text-gray-600">Entries</div>
           </div>
-          <div className="text-gray-600 text-sm">Total Words Written</div>
-        </div>
-      </div>
-
-      {/* Additional Stats Row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-teal-500">
-          <div className="text-2xl font-bold text-gray-800">{stats?.averageWords || 0}</div>
-          <div className="text-gray-600 text-sm">Avg Words Per Entry</div>
-        </div>
-        
-        <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-indigo-500">
-          <div className="text-2xl font-bold text-gray-800">{streakData?.longestStreak || 0}</div>
-          <div className="text-gray-600 text-sm">Longest Streak</div>
-        </div>
-
-        <div className="bg-white rounded-xl shadow-sm p-6 border-l-4 border-pink-500">
-          <div className="text-2xl font-bold text-gray-800">
-            {stats?.totalEntries > 0 ? Math.round((stats?.uniquePrompts / stats?.totalEntries) * 100) : 0}%
+          <div className="text-center">
+            <div className="text-2xl font-bold text-green-600">{streakData?.currentStreak || 0}</div>
+            <div className="text-xs text-gray-600">Streak 🔥</div>
           </div>
-          <div className="text-gray-600 text-sm">Prompt Variety</div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-purple-600">{stats?.totalWords ? Math.floor(stats.totalWords / 1000) + 'k' : 0}</div>
+            <div className="text-xs text-gray-600">Words</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-orange-600">{stats?.averageWords || 0}</div>
+            <div className="text-xs text-gray-600">Avg/Entry</div>
+          </div>
         </div>
       </div>
 

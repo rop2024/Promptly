@@ -90,6 +90,13 @@ const Navbar = ({ currentUser, onLogout }) => {
                         Signed in as {currentUser.email}
                       </div>
                       <Link
+                        to="/stats"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        📈 My Statistics
+                      </Link>
+                      <Link
                         to="/settings"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                         onClick={() => setIsMenuOpen(false)}
