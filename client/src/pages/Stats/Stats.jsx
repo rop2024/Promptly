@@ -7,6 +7,7 @@ const Stats = ({ currentUser }) => {
   const [streakData, setStreakData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [timeframe, setTimeframe] = useState('all'); // all, month, week
+  const [showAllAchievements, setShowAllAchievements] = useState(false);
 
   useEffect(() => {
     loadStatsData();
@@ -243,8 +244,8 @@ const Stats = ({ currentUser }) => {
               <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center text-6xl font-bold text-purple-600 shadow-lg border-4 border-white">
                 {currentUser?.name?.charAt(0).toUpperCase() || 'U'}
               </div>
-              <div className="absolute -bottom-2 -right-2 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg border-2 border-white">
-                Level {Math.floor((stats?.totalEntries || 0) / 10) + 1}
+              <div className="absolute -bottom-2 -right-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg border-2 border-white">
+                Level {stats?.level || 1}
               </div>
             </div>
             
@@ -257,6 +258,28 @@ const Stats = ({ currentUser }) => {
                   {currentUser?.bio || '"Every word written is a step towards self-discovery. Keep writing, keep growing."'}
                 </p>
               </div>
+              
+              {/* Level Progress Bar */}
+              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4 mb-3">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium">Level {stats?.level || 1}</span>
+                  <span className="text-sm">{formatNumber(stats?.xpInCurrentLevel || 0)} / {formatNumber(stats?.xpNeededForNextLevel || 100)} XP</span>
+                </div>
+                <div className="w-full bg-white/30 rounded-full h-3 overflow-hidden">
+                  <div 
+                    className="bg-gradient-to-r from-yellow-400 to-amber-500 h-3 rounded-full transition-all duration-500 flex items-center justify-end pr-1"
+                    style={{ width: `${stats?.progressPercentage || 0}%` }}
+                  >
+                    {stats?.progressPercentage > 10 && (
+                      <span className="text-xs font-bold text-white drop-shadow">{stats?.progressPercentage}%</span>
+                    )}
+                  </div>
+                </div>
+                <div className="text-xs text-white/80 mt-1">
+                  {stats?.xpNeededForNextLevel - stats?.xpInCurrentLevel || 0} XP to Level {(stats?.level || 1) + 1}
+                </div>
+              </div>
+              
               <div className="flex flex-wrap justify-center md:justify-start gap-3">
                 <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
                   <span className="text-sm">📅 Joined {new Date(currentUser?.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
@@ -266,6 +289,9 @@ const Stats = ({ currentUser }) => {
                 </div>
                 <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
                   <span className="text-sm">🏆 {completedCount} Achievements</span>
+                </div>
+                <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg">
+                  <span className="text-sm">⭐ {formatNumber(stats?.experiencePoints || 0)} Total XP</span>
                 </div>
               </div>
             </div>
@@ -368,18 +394,30 @@ const Stats = ({ currentUser }) => {
         </div>
       </div>
 
-      {/* All Achievements */}
+      {/* All Achievements - Collapsible */}
       <div>
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-gray-800 flex items-center">
-            <span className="mr-2">🎯</span>
-            All Achievements
-          </h2>
-          <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-5 py-2 rounded-lg font-bold shadow-lg">
-            {completedCount}/{achievements.length} Unlocked
+        <button
+          onClick={() => setShowAllAchievements(!showAllAchievements)}
+          className="w-full bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-4 border-2 border-indigo-200 hover:border-indigo-300 transition duration-200 flex items-center justify-between mb-4"
+        >
+          <div className="flex items-center">
+            <span className="text-2xl mr-3">🎯</span>
+            <h2 className="text-2xl font-bold text-gray-800">All Achievements</h2>
+            <div className="ml-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-1 rounded-lg font-bold text-sm shadow-lg">
+              {completedCount}/{achievements.length}
+            </div>
           </div>
-        </div>
+          <svg
+            className={`w-6 h-6 text-gray-600 transition-transform duration-200 ${showAllAchievements ? 'transform rotate-180' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
         
+        {showAllAchievements && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {sortedAchievements.map(achievement => {
             const isCompleted = achievement.condition();
@@ -429,6 +467,7 @@ const Stats = ({ currentUser }) => {
             );
           })}
         </div>
+        )}
       </div>
 
       {/* Motivational Section */}

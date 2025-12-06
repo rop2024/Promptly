@@ -25,6 +25,11 @@ const userSchema = new mongoose.Schema({
     minlength: 6,
     select: false // Don't return password in queries by default
   },
+  bio: {
+    type: String,
+    maxlength: [500, 'Bio cannot be more than 500 characters'],
+    default: ''
+  },
   role: {
     type: String,
     enum: ['user', 'admin'],
@@ -57,6 +62,15 @@ const userSchema = new mongoose.Schema({
     default: 0
   },
   totalEntriesWritten: {
+    type: Number,
+    default: 0
+  },
+  // Level system
+  level: {
+    type: Number,
+    default: 1
+  },
+  experiencePoints: {
     type: Number,
     default: 0
   },
@@ -167,6 +181,43 @@ userSchema.methods.updateLongestStreak = function() {
 // Method to get current date in YYYY-MM-DD format
 userSchema.methods.getCurrentDateString = function() {
   return new Date().toISOString().split('T')[0];
+};
+
+// Static method to calculate level and XP based on words and time
+userSchema.statics.calculateLevel = function(totalWords, totalTimeSpent) {
+  // XP calculation: 1 XP per word + 1 XP per 10 seconds of writing
+  const wordXP = totalWords;
+  const timeXP = Math.floor(totalTimeSpent / 10);
+  const totalXP = wordXP + timeXP;
+  
+  // Level calculation: exponential curve
+  // Level 1: 0 XP
+  // Level 2: 100 XP
+  // Level 3: 250 XP
+  // Level 4: 500 XP
+  // Formula: XP needed = 100 * level * (level - 1) / 2
+  let level = 1;
+  let xpForCurrentLevel = 0;
+  let xpForNextLevel = 100;
+  
+  while (totalXP >= xpForNextLevel) {
+    level++;
+    xpForCurrentLevel = xpForNextLevel;
+    xpForNextLevel = 100 * level * (level + 1) / 2;
+  }
+  
+  const xpInCurrentLevel = totalXP - xpForCurrentLevel;
+  const xpNeededForNextLevel = xpForNextLevel - xpForCurrentLevel;
+  const progressPercentage = Math.round((xpInCurrentLevel / xpNeededForNextLevel) * 100);
+  
+  return {
+    level,
+    experiencePoints: totalXP,
+    xpInCurrentLevel,
+    xpNeededForNextLevel,
+    progressPercentage,
+    xpForNextLevel
+  };
 };
 
 // Static method to recalculate streak for a user (for data integrity)

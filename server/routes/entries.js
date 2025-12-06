@@ -292,6 +292,16 @@ router.get('/stats/overview', async (req, res, next) => {
       .limit(5)
       .select('title updatedAt');
 
+    // Calculate level and XP
+    const User = (await import('../models/User.js')).default;
+    const levelInfo = User.calculateLevel(totalWords, totalTimeSpent);
+    
+    // Update user's level and XP in database
+    await User.findByIdAndUpdate(req.user.id, {
+      level: levelInfo.level,
+      experiencePoints: levelInfo.experiencePoints
+    });
+
     res.status(200).json({
       success: true,
       data: {
@@ -302,7 +312,13 @@ router.get('/stats/overview', async (req, res, next) => {
         averageTimeSpent,
         uniquePrompts: promptsWritten.length,
         monthlyStats,
-        recentActivity: recentEntries
+        recentActivity: recentEntries,
+        level: levelInfo.level,
+        experiencePoints: levelInfo.experiencePoints,
+        xpInCurrentLevel: levelInfo.xpInCurrentLevel,
+        xpNeededForNextLevel: levelInfo.xpNeededForNextLevel,
+        progressPercentage: levelInfo.progressPercentage,
+        xpForNextLevel: levelInfo.xpForNextLevel
       }
     });
   } catch (error) {

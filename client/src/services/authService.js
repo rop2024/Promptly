@@ -47,6 +47,25 @@ const authService = {
   getProtectedData: async () => {
     // this hits /api/auth/me which is protected
     return api.get('/auth/me');
+  },
+
+  updateDetails: async ({ name, email, bio }) => {
+    const res = await api.put('/auth/updatedetails', { name, email, bio });
+    if (res.data?.data) {
+      // Update local storage with new user data
+      const currentUser = authService.getCurrentUser();
+      const updatedUser = { ...currentUser, ...res.data.data };
+      localStorage.setItem(storageUserKey, JSON.stringify(updatedUser));
+    }
+    return res;
+  },
+
+  updatePassword: async ({ currentPassword, newPassword }) => {
+    const res = await api.put('/auth/updatepassword', { currentPassword, newPassword });
+    if (res.data?.token) {
+      localStorage.setItem(storageTokenKey, res.data.token);
+    }
+    return res;
   }
 };
 

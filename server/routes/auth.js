@@ -131,6 +131,11 @@ router.put('/updatedetails', protect, async (req, res, next) => {
       email: req.body.email
     };
 
+    // Add bio if provided
+    if (req.body.bio !== undefined) {
+      fieldsToUpdate.bio = req.body.bio;
+    }
+
     const user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate, {
       new: true,
       runValidators: true

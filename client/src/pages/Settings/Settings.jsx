@@ -94,18 +94,24 @@ const Settings = () => {
     setMessage({ type: '', text: '' });
 
     try {
-      await authService.updateDetails({
+      const response = await authService.updateDetails({
         name: profileForm.name,
-        email: profileForm.email
+        email: profileForm.email,
+        bio: profileForm.bio
       });
 
       setMessage({ type: 'success', text: 'Profile updated successfully!' });
       
-      // Update local storage
-      const user = authService.getCurrentUser();
-      user.name = profileForm.name;
-      user.email = profileForm.email;
-      localStorage.setItem('user', JSON.stringify(user));
+      // Update local storage with response data
+      if (response?.data?.user) {
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+      } else {
+        const user = authService.getCurrentUser();
+        user.name = profileForm.name;
+        user.email = profileForm.email;
+        user.bio = profileForm.bio;
+        localStorage.setItem('user', JSON.stringify(user));
+      }
       
       // Force a refresh of user data in parent components
       window.dispatchEvent(new Event('userUpdated'));
