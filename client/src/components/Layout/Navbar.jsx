@@ -14,7 +14,7 @@ const Navbar = ({ currentUser, onLogout }) => {
   };
 
   const navLinkClass = ({ isActive }) => `
-    flex items-center space-x-2 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300
+    flex items-center space-x-2 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-300 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none
     ${isActive 
       ? 'bg-brand-primary/10 ring-1 ring-brand-primary text-gray-900' 
       : 'text-gray-700 hover:bg-gray-50'
@@ -57,7 +57,7 @@ const Navbar = ({ currentUser, onLogout }) => {
               {/* New Entry Button - Desktop */}
               <NavLink
                 to="/entries/new"
-                className="hidden md:flex items-center space-x-2 bg-brand-primary text-white px-4 py-3 rounded-lg hover:bg-brand-secondary transition-all duration-300 text-sm font-medium shadow-soft"
+                className="hidden md:flex items-center space-x-2 bg-brand-primary text-white px-4 py-3 rounded-lg hover:bg-brand-secondary transition-all duration-300 text-sm font-medium shadow-soft focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus-visible:outline-none"
               >
                 <Plus className="w-5 h-5" />
                 <span>New Entry</span>
@@ -76,7 +76,7 @@ const Navbar = ({ currentUser, onLogout }) => {
               {/* Logout Button - Desktop */}
               <button
                 onClick={handleLogout}
-                className="hidden md:flex items-center space-x-2 px-4 py-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all duration-300"
+                className="hidden md:flex items-center space-x-2 px-4 py-3 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none"
                 aria-label="Sign out"
               >
                 <LogOut className="w-5 h-5" />
@@ -86,8 +86,9 @@ const Navbar = ({ currentUser, onLogout }) => {
               {/* Mobile menu button */}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden p-3 rounded-lg text-gray-700 hover:bg-gray-50 transition-all duration-300"
+                className="md:hidden p-3 rounded-lg text-gray-700 hover:bg-gray-50 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none"
                 aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={isMenuOpen}
               >
                 {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>

@@ -310,8 +310,9 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
             <button
               onClick={handleRefreshPrompt}
               disabled={loading}
-              className="flex items-center space-x-2 border border-gray-200 px-4 py-2 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-all duration-300 text-sm font-medium"
+              className="flex items-center space-x-2 border border-gray-200 px-4 py-2 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-all duration-300 text-sm font-medium focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none"
               title="Get a different prompt"
+              aria-label="Get a different prompt"
             >
               <RefreshCw className="w-4 h-4" />
               <span>Change</span>
@@ -320,7 +321,8 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
             <button
               onClick={handleSkipPrompt}
               disabled={completing}
-              className="flex items-center space-x-2 border border-gray-200 px-4 py-2 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-all duration-300 text-sm font-medium"
+              className="flex items-center space-x-2 border border-gray-200 px-4 py-2 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-all duration-300 text-sm font-medium focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none"
+              aria-label="Skip today's prompt"
             >
               <SkipForward className="w-4 h-4" />
               <span>Skip Today</span>
@@ -330,7 +332,8 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
           <button
             onClick={handleCompletePrompt}
             disabled={completing || !userResponse.trim()}
-            className="flex items-center space-x-2 bg-brand-primary text-white px-6 py-2 rounded-lg transition-transform hover:scale-105 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:hover:scale-100 font-medium w-full sm:w-auto justify-center"
+            className="flex items-center space-x-2 bg-brand-primary text-white px-6 py-2 rounded-lg transition-transform hover:scale-105 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:hover:scale-100 font-medium w-full sm:w-auto justify-center focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 focus-visible:outline-none"
+            aria-label="Complete and save prompt response"
           >
             {completing ? (
               <>
@@ -353,7 +356,9 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
         <div className="mt-6 border-t border-gray-200 pt-4">
           <button
             onClick={() => setShowAbout(!showAbout)}
-            className="flex items-center justify-between w-full text-left text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors duration-300"
+            className="flex items-center justify-between w-full text-left text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none rounded-lg"
+            aria-label={showAbout ? "Hide about daily prompts" : "Show about daily prompts"}
+            aria-expanded={showAbout}
           >
             <span>About Daily Prompts</span>
             {showAbout ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}

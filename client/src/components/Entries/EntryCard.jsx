@@ -65,22 +65,25 @@ const EntryCard = ({ entry, onEdit, onDelete, onView }) => {
           <div className="flex space-x-1 ml-3 flex-shrink-0">
             <button
               onClick={() => onView(entry)}
-              className="p-2 text-gray-400 hover:text-brand-primary transition-all duration-300 rounded-lg hover:bg-brand-accent-1/50"
+              className="p-2 text-gray-400 hover:text-brand-primary transition-all duration-300 rounded-lg hover:bg-brand-accent-1/50 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none"
               title="View entry"
+              aria-label="View entry"
             >
               <Eye className="w-4 h-4" />
             </button>
             <button
               onClick={() => onEdit(entry)}
-              className="p-2 text-gray-400 hover:text-brand-secondary transition-all duration-300 rounded-lg hover:bg-brand-accent-2/30"
+              className="p-2 text-gray-400 hover:text-brand-secondary transition-all duration-300 rounded-lg hover:bg-brand-accent-2/30 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none"
               title="Edit entry"
+              aria-label="Edit entry"
             >
               <Edit className="w-4 h-4" />
             </button>
             <button
               onClick={() => onDelete(entry)}
-              className="p-2 text-gray-400 hover:text-red-500 transition-all duration-300 rounded-lg hover:bg-red-50"
+              className="p-2 text-gray-400 hover:text-red-500 transition-all duration-300 rounded-lg hover:bg-red-50 focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:outline-none"
               title="Delete entry"
+              aria-label="Delete entry"
             >
               <Trash2 className="w-4 h-4" />
             </button>
@@ -126,6 +129,7 @@ const EntryCard = ({ entry, onEdit, onDelete, onView }) => {
             Read more →
           </Link>
         </div>
+      </div>
     </article>
   );
 };

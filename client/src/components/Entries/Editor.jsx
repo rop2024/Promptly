@@ -525,11 +525,12 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
                 <button
                   type="button"
                   onClick={() => setIsActive(!isActive)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105 ${
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none ${
                     isActive 
                       ? 'bg-orange-100 text-orange-700 hover:bg-orange-200'
                       : 'bg-green-100 text-green-700 hover:bg-green-200'
                   }`}
+                  aria-label={isActive ? "Pause writing timer" : "Resume writing timer"}
                 >
                   {isActive ? (
                     <>
@@ -771,7 +772,8 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
             <span className="font-medium">{notification.message}</span>
             <button
               onClick={() => setNotification({ show: false, message: '' })}
-              className="ml-2 text-white hover:text-white/80 focus:outline-none transition-colors duration-300"
+              className="ml-2 text-white hover:text-white/80 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none transition-colors duration-300"
+              aria-label="Close notification"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
