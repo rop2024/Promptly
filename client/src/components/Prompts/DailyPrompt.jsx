@@ -174,7 +174,7 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
                 <div className="flex items-center mb-4">
                   <span className="text-2xl mr-3">{CATEGORY_ICONS[promptData.category]}</span>
                   <div>
-                    <h2 className="text-xl font-bold">Daily Prompt</h2>
+                    <h2 className="text-xl font-bold">📝 Today's Prompt</h2>
                     <span className={`text-sm font-medium px-2 py-1 rounded-full ${CATEGORY_COLORS[promptData.category]}`}>
                       {promptData.category}
                     </span>
@@ -236,10 +236,10 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
       <div className="text-center mb-6">
         <div className="flex items-center justify-center mb-3">
           <span className="text-3xl mr-3">💡</span>
-          <h2 className="text-2xl font-bold text-gray-800">Daily Prompt</h2>
+          <h2 className="text-2xl font-bold text-gray-800">📝 Today's Writing Prompt</h2>
         </div>
         <p className="text-gray-600">
-          Reflect on today's question to build your writing habit
+          Reflect on this question and let your thoughts flow
         </p>
       </div>
 

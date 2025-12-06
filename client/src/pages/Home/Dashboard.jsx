@@ -128,12 +128,12 @@ const Dashboard = ({ currentUser }) => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
           <div>
             <h1 className="text-3xl font-bold mb-2">
-              Welcome back, {currentUser.name}! 👋
+              Welcome Back, {currentUser.name}! 👋
             </h1>
             <p className="text-blue-100 text-lg">
               {streakData?.writtenToday 
-                ? "Great job completing today's prompt! Keep your streak alive. 🔥"
-                : "Ready for today's writing prompt?"
+                ? "Excellent work! You've written today. Keep the momentum going! 🔥"
+                : "Ready to capture your thoughts today?"
               }
             </p>
           </div>

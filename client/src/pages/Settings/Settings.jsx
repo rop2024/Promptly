@@ -270,8 +270,8 @@ const Settings = () => {
     <div className="max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Settings</h1>
-        <p className="text-gray-600 mt-2">Manage your account and preferences</p>
+        <h1 className="text-3xl font-bold text-gray-800">⚙️ Account Settings</h1>
+        <p className="text-gray-600 mt-2">Manage your profile and security preferences</p>
       </div>
 
       {/* Message Display */}
@@ -364,8 +364,8 @@ const Settings = () => {
                   </span>
                 </div>
                 <div className="ml-4">
-                  <h2 className="text-xl font-bold text-gray-800">Profile Settings</h2>
-                  <p className="text-gray-600">Update your personal information</p>
+                  <h2 className="text-xl font-bold text-gray-800">👤 Profile Information</h2>
+                  <p className="text-gray-600">Manage your personal details</p>
                 </div>
               </div>
 
@@ -449,8 +449,8 @@ const Settings = () => {
           {activeTab === 'password' && (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
               <div className="mb-6">
-                <h2 className="text-xl font-bold text-gray-800">Password Settings</h2>
-                <p className="text-gray-600">Update your password for security</p>
+                <h2 className="text-xl font-bold text-gray-800">🔐 Security & Password</h2>
+                <p className="text-gray-600">Keep your account secure</p>
               </div>
 
               <form onSubmit={handlePasswordSubmit} className="space-y-6">

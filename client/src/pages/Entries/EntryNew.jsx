@@ -121,8 +121,8 @@ const EntryNew = () => {
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">Write New Entry</h1>
-          <p className="text-gray-600 mt-1">Capture your thoughts, feelings, and reflections</p>
+          <h1 className="text-3xl font-bold text-gray-800">✍️ New Entry</h1>
+          <p className="text-gray-600 mt-1">Take a moment to reflect and write freely</p>
         </div>
         
         <div className="mt-4 md:mt-0 flex space-x-2">
@@ -170,7 +170,7 @@ const EntryNew = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h3 className="text-base font-semibold text-gray-800">Writing Tips</h3>
+            <h3 className="text-base font-semibold text-gray-800">💡 Helpful Writing Tips</h3>
           </div>
           <svg
             className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${showTips ? 'transform rotate-180' : ''}`}

@@ -185,8 +185,8 @@ const EntryEdit = () => {
       {/* Page Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">Edit Entry</h1>
-          <p className="text-gray-600 mt-1">Update your entry</p>
+          <h1 className="text-3xl font-bold text-gray-800">✏️ Edit Entry</h1>
+          <p className="text-gray-600 mt-1">Refine and update your thoughts</p>
         </div>
         
         <div className="text-sm text-gray-500">

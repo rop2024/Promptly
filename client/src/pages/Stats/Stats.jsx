@@ -303,7 +303,7 @@ const Stats = ({ currentUser }) => {
       <div>
         <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
           <span className="mr-2">🏆</span>
-          Top Achievements
+          Your Achievements
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {sortedAchievements.filter(a => a.condition()).slice(0, 6).map(achievement => (
@@ -402,9 +402,9 @@ const Stats = ({ currentUser }) => {
         >
           <div className="flex items-center">
             <span className="text-2xl mr-3">🎯</span>
-            <h2 className="text-2xl font-bold text-gray-800">All Achievements</h2>
+            <h2 className="text-2xl font-bold text-gray-800">View All Achievements</h2>
             <div className="ml-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-1 rounded-lg font-bold text-sm shadow-lg">
-              {completedCount}/{achievements.length}
+              {completedCount}/{achievements.length} Unlocked
             </div>
           </div>
           <svg

@@ -74,10 +74,10 @@ const Register = () => {
               <span className="text-white font-bold text-xl">J</span>
             </div>
             <h2 className="mt-6 text-3xl font-bold text-gray-900">
-              Create your account
+              Begin Your Journey
             </h2>
             <p className="mt-2 text-sm text-gray-600">
-              Or{' '}
+              Create an account and start writing today, or{' '}
               <Link
                 to="/login"
                 className="font-medium text-green-600 hover:text-green-500"

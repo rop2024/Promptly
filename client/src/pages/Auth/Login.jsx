@@ -61,10 +61,10 @@ const Login = () => {
               <span className="text-white font-bold text-xl">J</span>
             </div>
             <h2 className="mt-6 text-3xl font-bold text-gray-900">
-              Sign in to your account
+              Welcome Back!
             </h2>
             <p className="mt-2 text-sm text-gray-600">
-              Or{' '}
+              Sign in to continue your journey, or{' '}
               <Link
                 to="/register"
                 className="font-medium text-blue-600 hover:text-blue-500"
