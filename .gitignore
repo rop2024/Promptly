@@ -24,8 +24,9 @@ client/.env
 client/.env.*
 server/.env
 
-# Documentation (temporary)
+# Documentation (internal/temporary)
 HOW_TO_ADD_PROMPTS.md
+ARCHITECTURE.md
 
 # Logs
 logs
