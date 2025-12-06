@@ -195,11 +195,10 @@ const sendTokenResponse = (user, statusCode, res) => {
   // Generate token
   const token = user.getSignedJwtToken();
 
-  // Cookie options
+  // Cookie options - default to 30 days if not set
+  const cookieExpireDays = parseInt(process.env.JWT_COOKIE_EXPIRE) || 30;
   const options = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
-    ),
+    expires: new Date(Date.now() + cookieExpireDays * 24 * 60 * 60 * 1000),
     httpOnly: true
   };
 
