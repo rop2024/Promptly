@@ -36,6 +36,184 @@ const Stats = ({ currentUser }) => {
     return num.toLocaleString();
   };
 
+  // Achievement definitions
+  const achievements = [
+    {
+      id: 'first-steps',
+      emoji: '✍️',
+      title: 'First Steps',
+      description: 'Write your first entry',
+      condition: () => (stats?.totalEntries || 0) >= 1,
+      progress: () => Math.min((stats?.totalEntries || 0) / 1 * 100, 100),
+      progressText: () => `${stats?.totalEntries || 0}/1 entries`
+    },
+    {
+      id: 'early-bird',
+      emoji: '🌅',
+      title: 'Early Bird',
+      description: 'Write 5 entries',
+      condition: () => (stats?.totalEntries || 0) >= 5,
+      progress: () => Math.min((stats?.totalEntries || 0) / 5 * 100, 100),
+      progressText: () => `${stats?.totalEntries || 0}/5 entries`
+    },
+    {
+      id: 'dedicated',
+      emoji: '📖',
+      title: 'Dedicated Writer',
+      description: 'Write 10 entries',
+      condition: () => (stats?.totalEntries || 0) >= 10,
+      progress: () => Math.min((stats?.totalEntries || 0) / 10 * 100, 100),
+      progressText: () => `${stats?.totalEntries || 0}/10 entries`
+    },
+    {
+      id: 'regular',
+      emoji: '🎯',
+      title: 'Regular Contributor',
+      description: 'Write 25 entries',
+      condition: () => (stats?.totalEntries || 0) >= 25,
+      progress: () => Math.min((stats?.totalEntries || 0) / 25 * 100, 100),
+      progressText: () => `${stats?.totalEntries || 0}/25 entries`
+    },
+    {
+      id: 'prolific',
+      emoji: '📚',
+      title: 'Prolific Writer',
+      description: 'Write 50 entries',
+      condition: () => (stats?.totalEntries || 0) >= 50,
+      progress: () => Math.min((stats?.totalEntries || 0) / 50 * 100, 100),
+      progressText: () => `${stats?.totalEntries || 0}/50 entries`
+    },
+    {
+      id: 'master',
+      emoji: '👑',
+      title: 'Writing Master',
+      description: 'Write 100 entries',
+      condition: () => (stats?.totalEntries || 0) >= 100,
+      progress: () => Math.min((stats?.totalEntries || 0) / 100 * 100, 100),
+      progressText: () => `${stats?.totalEntries || 0}/100 entries`
+    },
+    {
+      id: 'week-warrior',
+      emoji: '🔥',
+      title: 'Week Warrior',
+      description: 'Maintain a 7-day streak',
+      condition: () => (streakData?.longestStreak || 0) >= 7,
+      progress: () => Math.min((streakData?.longestStreak || 0) / 7 * 100, 100),
+      progressText: () => `${streakData?.longestStreak || 0}/7 days`
+    },
+    {
+      id: 'two-week',
+      emoji: '⚡',
+      title: 'Two Week Champion',
+      description: 'Maintain a 14-day streak',
+      condition: () => (streakData?.longestStreak || 0) >= 14,
+      progress: () => Math.min((streakData?.longestStreak || 0) / 14 * 100, 100),
+      progressText: () => `${streakData?.longestStreak || 0}/14 days`
+    },
+    {
+      id: 'monthly-master',
+      emoji: '🏆',
+      title: 'Monthly Master',
+      description: 'Maintain a 30-day streak',
+      condition: () => (streakData?.longestStreak || 0) >= 30,
+      progress: () => Math.min((streakData?.longestStreak || 0) / 30 * 100, 100),
+      progressText: () => `${streakData?.longestStreak || 0}/30 days`
+    },
+    {
+      id: 'century-club',
+      emoji: '💎',
+      title: 'Century Club',
+      description: 'Maintain a 100-day streak',
+      condition: () => (streakData?.longestStreak || 0) >= 100,
+      progress: () => Math.min((streakData?.longestStreak || 0) / 100 * 100, 100),
+      progressText: () => `${streakData?.longestStreak || 0}/100 days`
+    },
+    {
+      id: 'year-long',
+      emoji: '🌟',
+      title: 'Year Long Writer',
+      description: 'Maintain a 365-day streak',
+      condition: () => (streakData?.longestStreak || 0) >= 365,
+      progress: () => Math.min((streakData?.longestStreak || 0) / 365 * 100, 100),
+      progressText: () => `${streakData?.longestStreak || 0}/365 days`
+    },
+    {
+      id: 'first-words',
+      emoji: '💬',
+      title: 'First Thousand',
+      description: 'Write 1,000 words',
+      condition: () => (stats?.totalWords || 0) >= 1000,
+      progress: () => Math.min((stats?.totalWords || 0) / 1000 * 100, 100),
+      progressText: () => `${formatNumber(stats?.totalWords || 0)}/1,000 words`
+    },
+    {
+      id: 'wordsmith',
+      emoji: '📝',
+      title: 'Wordsmith',
+      description: 'Write 10,000 words',
+      condition: () => (stats?.totalWords || 0) >= 10000,
+      progress: () => Math.min((stats?.totalWords || 0) / 10000 * 100, 100),
+      progressText: () => `${formatNumber(stats?.totalWords || 0)}/10,000 words`
+    },
+    {
+      id: 'novelist',
+      emoji: '📖',
+      title: 'Novelist',
+      description: 'Write 50,000 words',
+      condition: () => (stats?.totalWords || 0) >= 50000,
+      progress: () => Math.min((stats?.totalWords || 0) / 50000 * 100, 100),
+      progressText: () => `${formatNumber(stats?.totalWords || 0)}/50,000 words`
+    },
+    {
+      id: 'epic-writer',
+      emoji: '🎭',
+      title: 'Epic Writer',
+      description: 'Write 100,000 words',
+      condition: () => (stats?.totalWords || 0) >= 100000,
+      progress: () => Math.min((stats?.totalWords || 0) / 100000 * 100, 100),
+      progressText: () => `${formatNumber(stats?.totalWords || 0)}/100,000 words`
+    },
+    {
+      id: 'consistent',
+      emoji: '🎨',
+      title: 'Consistent Creator',
+      description: 'Average 200+ words per entry',
+      condition: () => (stats?.averageWords || 0) >= 200,
+      progress: () => Math.min((stats?.averageWords || 0) / 200 * 100, 100),
+      progressText: () => `${stats?.averageWords || 0}/200 avg words`
+    },
+    {
+      id: 'detailed',
+      emoji: '📃',
+      title: 'Detailed Writer',
+      description: 'Average 500+ words per entry',
+      condition: () => (stats?.averageWords || 0) >= 500,
+      progress: () => Math.min((stats?.averageWords || 0) / 500 * 100, 100),
+      progressText: () => `${stats?.averageWords || 0}/500 avg words`
+    },
+    {
+      id: 'explorer',
+      emoji: '🗺️',
+      title: 'Prompt Explorer',
+      description: 'Use 10 different prompts',
+      condition: () => (stats?.uniquePrompts || 0) >= 10,
+      progress: () => Math.min((stats?.uniquePrompts || 0) / 10 * 100, 100),
+      progressText: () => `${stats?.uniquePrompts || 0}/10 prompts`
+    }
+  ];
+
+  // Sort achievements: completed first, then by progress
+  const sortedAchievements = [...achievements].sort((a, b) => {
+    const aCompleted = a.condition();
+    const bCompleted = b.condition();
+    if (aCompleted && !bCompleted) return -1;
+    if (!aCompleted && bCompleted) return 1;
+    if (!aCompleted && !bCompleted) return b.progress() - a.progress();
+    return 0;
+  });
+
+  const completedCount = achievements.filter(a => a.condition()).length;
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -190,67 +368,61 @@ const Stats = ({ currentUser }) => {
 
       {/* Achievements */}
       <div>
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Achievements</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-gray-800">Achievements</h2>
+          <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-lg font-bold">
+            {completedCount}/{achievements.length} Unlocked
+          </div>
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {/* First Entry */}
-          <div className={`bg-white rounded-xl shadow-sm p-6 border-2 ${stats?.totalEntries >= 1 ? 'border-green-500' : 'border-gray-200 opacity-50'}`}>
-            <div className="text-4xl mb-2">✍️</div>
-            <div className="font-bold text-gray-800">First Steps</div>
-            <div className="text-sm text-gray-600">Write your first entry</div>
-            {stats?.totalEntries >= 1 && (
-              <div className="text-xs text-green-600 mt-2 font-medium">✓ Completed</div>
-            )}
-          </div>
-
-          {/* 7-day Streak */}
-          <div className={`bg-white rounded-xl shadow-sm p-6 border-2 ${streakData?.longestStreak >= 7 ? 'border-green-500' : 'border-gray-200 opacity-50'}`}>
-            <div className="text-4xl mb-2">🔥</div>
-            <div className="font-bold text-gray-800">Week Warrior</div>
-            <div className="text-sm text-gray-600">Maintain a 7-day streak</div>
-            {streakData?.longestStreak >= 7 && (
-              <div className="text-xs text-green-600 mt-2 font-medium">✓ Completed</div>
-            )}
-          </div>
-
-          {/* 30-day Streak */}
-          <div className={`bg-white rounded-xl shadow-sm p-6 border-2 ${streakData?.longestStreak >= 30 ? 'border-green-500' : 'border-gray-200 opacity-50'}`}>
-            <div className="text-4xl mb-2">🏆</div>
-            <div className="font-bold text-gray-800">Monthly Master</div>
-            <div className="text-sm text-gray-600">Maintain a 30-day streak</div>
-            {streakData?.longestStreak >= 30 && (
-              <div className="text-xs text-green-600 mt-2 font-medium">✓ Completed</div>
-            )}
-          </div>
-
-          {/* 50 Entries */}
-          <div className={`bg-white rounded-xl shadow-sm p-6 border-2 ${stats?.totalEntries >= 50 ? 'border-green-500' : 'border-gray-200 opacity-50'}`}>
-            <div className="text-4xl mb-2">📚</div>
-            <div className="font-bold text-gray-800">Prolific Writer</div>
-            <div className="text-sm text-gray-600">Write 50 entries</div>
-            {stats?.totalEntries >= 50 && (
-              <div className="text-xs text-green-600 mt-2 font-medium">✓ Completed</div>
-            )}
-          </div>
-
-          {/* 10,000 Words */}
-          <div className={`bg-white rounded-xl shadow-sm p-6 border-2 ${stats?.totalWords >= 10000 ? 'border-green-500' : 'border-gray-200 opacity-50'}`}>
-            <div className="text-4xl mb-2">📝</div>
-            <div className="font-bold text-gray-800">Wordsmith</div>
-            <div className="text-sm text-gray-600">Write 10,000 words</div>
-            {stats?.totalWords >= 10000 && (
-              <div className="text-xs text-green-600 mt-2 font-medium">✓ Completed</div>
-            )}
-          </div>
-
-          {/* 100-day Streak */}
-          <div className={`bg-white rounded-xl shadow-sm p-6 border-2 ${streakData?.longestStreak >= 100 ? 'border-green-500' : 'border-gray-200 opacity-50'}`}>
-            <div className="text-4xl mb-2">💎</div>
-            <div className="font-bold text-gray-800">Century Club</div>
-            <div className="text-sm text-gray-600">Maintain a 100-day streak</div>
-            {streakData?.longestStreak >= 100 && (
-              <div className="text-xs text-green-600 mt-2 font-medium">✓ Completed</div>
-            )}
-          </div>
+          {sortedAchievements.map(achievement => {
+            const isCompleted = achievement.condition();
+            const progress = achievement.progress();
+            
+            return (
+              <div 
+                key={achievement.id}
+                className={`bg-white rounded-xl shadow-sm p-6 border-2 transition-all duration-300 ${
+                  isCompleted 
+                    ? 'border-green-500 transform hover:scale-105' 
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <div className={`text-4xl mb-2 ${!isCompleted && 'grayscale opacity-50'}`}>
+                  {achievement.emoji}
+                </div>
+                <div className={`font-bold ${isCompleted ? 'text-gray-800' : 'text-gray-500'}`}>
+                  {achievement.title}
+                </div>
+                <div className={`text-sm ${isCompleted ? 'text-gray-600' : 'text-gray-400'} mb-3`}>
+                  {achievement.description}
+                </div>
+                
+                {isCompleted ? (
+                  <div className="flex items-center text-xs text-green-600 font-medium bg-green-50 px-3 py-1 rounded-full">
+                    <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    Completed!
+                  </div>
+                ) : (
+                  <div>
+                    <div className="flex justify-between text-xs text-gray-500 mb-1">
+                      <span>Progress</span>
+                      <span className="font-medium">{achievement.progressText()}</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 
