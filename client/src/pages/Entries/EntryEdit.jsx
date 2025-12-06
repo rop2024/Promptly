@@ -12,6 +12,10 @@ const EntryEdit = () => {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
+    document.title = 'Edit Entry - Promptly';
+  }, []);
+
+  useEffect(() => {
     loadEntry();
   }, [id]);
 

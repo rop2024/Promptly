@@ -14,6 +14,7 @@ const Register = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    document.title = 'Create Account - Promptly';
     // Redirect if already logged in
     if (authService.getCurrentUser()) {
       navigate('/');

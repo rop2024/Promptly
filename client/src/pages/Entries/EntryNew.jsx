@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import entryService from '../../services/entryService.js';
 import Editor from '../../components/Entries/Editor.jsx';
 
 const EntryNew = () => {
+  useEffect(() => {
+    document.title = 'New Entry - Promptly';
+  }, []);
   const navigate = useNavigate();
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');

@@ -14,6 +14,7 @@ const Dashboard = ({ currentUser }) => {
   const [showAbout, setShowAbout] = useState(false);
 
   useEffect(() => {
+    document.title = 'Dashboard - Promptly';
     loadDashboardData();
   }, [currentUser]);
 

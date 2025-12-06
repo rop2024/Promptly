@@ -15,6 +15,7 @@ const Login = () => {
   const from = location.state?.from?.pathname || '/';
 
   useEffect(() => {
+    document.title = 'Sign In - Promptly';
     // Redirect if already logged in
     if (authService.getCurrentUser()) {
       navigate(from, { replace: true });

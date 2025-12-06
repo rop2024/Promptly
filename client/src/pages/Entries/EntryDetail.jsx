@@ -14,6 +14,15 @@ const EntryDetail = () => {
     loadEntry();
   }, [id]);
 
+  // Update page title when entry loads
+  useEffect(() => {
+    if (entry) {
+      document.title = `${entry.title} - Promptly`;
+    } else {
+      document.title = 'Entry Details - Promptly';
+    }
+  }, [entry]);
+
   const loadEntry = async () => {
     try {
       setLoading(true);

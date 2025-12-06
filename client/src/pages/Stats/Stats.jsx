@@ -10,6 +10,7 @@ const Stats = ({ currentUser }) => {
   const [showAllAchievements, setShowAllAchievements] = useState(false);
 
   useEffect(() => {
+    document.title = 'Your Journey - Promptly';
     loadStatsData();
   }, [currentUser]);
 

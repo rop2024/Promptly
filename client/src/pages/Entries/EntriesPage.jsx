@@ -15,6 +15,10 @@ const EntriesPage = () => {
   const [pagination, setPagination] = useState(null);
 
   useEffect(() => {
+    document.title = 'Your Journal - Promptly';
+  }, []);
+
+  useEffect(() => {
     loadEntries();
   }, [filters]);
 

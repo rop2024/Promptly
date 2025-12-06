@@ -4,6 +4,9 @@ import authService from '../../services/authService.js';
 import promptService from '../../services/promptService.js';
 
 const Settings = () => {
+  useEffect(() => {
+    document.title = 'Account Settings - Promptly';
+  }, []);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('profile');
   const [loading, setLoading] = useState(false);
