@@ -88,7 +88,7 @@ const Dashboard = ({ currentUser }) => {
             <h2 className="text-lg font-bold">About Promptly</h2>
           </div>
           <svg
-            className={`w-5 h-5 transition-transform duration-200 ${showAbout ? 'transform rotate-180' : ''}`}
+            className={`w-5 h-5 transition-transform duration-300 ${showAbout ? 'transform rotate-180' : ''}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -140,7 +140,7 @@ const Dashboard = ({ currentUser }) => {
           </div>
           <Link
             to="/entries/new"
-            className="mt-4 md:mt-0 bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition duration-200 shadow-lg"
+            className="mt-4 md:mt-0 bg-white text-brand-primary px-6 py-3 rounded-lg font-semibold hover:bg-green-50 transition-all duration-300 hover:scale-105 shadow-lg"
           >
             + Start Writing
           </Link>

@@ -80,12 +80,12 @@ const EntryNew = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <main className="max-w-3xl mx-auto px-4 py-8">
       {/* Back Navigation */}
       <div className="mb-6">
         <Link
           to="/entries"
-          className="inline-flex items-center text-gray-600 hover:text-gray-800 transition duration-200"
+          className="inline-flex items-center text-gray-600 hover:text-gray-800 transition-all duration-300"
         >
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -132,7 +132,7 @@ const EntryNew = () => {
           <button
             onClick={handleQuickStart}
             disabled={saving}
-            className="flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:opacity-90 transition duration-200 font-medium shadow-lg"
+            className="flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:scale-105 transition-all duration-300 font-medium shadow-soft"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -165,7 +165,7 @@ const EntryNew = () => {
       <div className="mb-6">
         <button
           onClick={() => setShowTips(!showTips)}
-          className="w-full bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200 hover:border-blue-300 transition duration-200 flex items-center justify-between"
+          className="w-full bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200 hover:border-blue-300 transition-all duration-300 flex items-center justify-between"
         >
           <div className="flex items-center">
             <div className="bg-blue-100 p-2 rounded-lg mr-3">
@@ -176,7 +176,7 @@ const EntryNew = () => {
             <h3 className="text-base font-semibold text-gray-800">💡 Helpful Writing Tips</h3>
           </div>
           <svg
-            className={`w-5 h-5 text-gray-600 transition-transform duration-200 ${showTips ? 'transform rotate-180' : ''}`}
+            className={`w-5 h-5 text-gray-600 transition-transform duration-300 ${showTips ? 'transform rotate-180' : ''}`}
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -184,28 +184,28 @@ const EntryNew = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-        {showTips && (
-          <div className="mt-2 bg-white rounded-lg p-4 border border-blue-200 shadow-sm">
+        <div className="collapse" style={{ height: showTips ? 'auto' : '0' }}>
+          <div className="mt-2 bg-white rounded-lg p-4 border border-brand-primary/30 shadow-sm">
             <ul className="text-gray-600 space-y-2">
               <li className="flex items-center">
-                <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                <span className="w-2 h-2 bg-brand-primary rounded-full mr-3"></span>
                 Be honest and authentic with yourself
               </li>
               <li className="flex items-center">
-                <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                <span className="w-2 h-2 bg-brand-primary rounded-full mr-3"></span>
                 Don't worry about grammar or spelling
               </li>
               <li className="flex items-center">
-                <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                <span className="w-2 h-2 bg-brand-primary rounded-full mr-3"></span>
                 Write for at least 5 minutes for best results
               </li>
               <li className="flex items-center">
-                <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                <span className="w-2 h-2 bg-brand-primary rounded-full mr-3"></span>
                 Use tags to organize similar entries
               </li>
             </ul>
           </div>
-        )}
+        </div>
       </div>
 
       {/* Editor Component */}
@@ -275,7 +275,7 @@ const EntryNew = () => {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

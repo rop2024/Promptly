@@ -15,7 +15,7 @@ const EntriesPage = () => {
   const [pagination, setPagination] = useState(null);
 
   useEffect(() => {
-    document.title = 'Your Journal - Promptly';
+    document.title = 'Your Entries - Promptly';
   }, []);
 
   useEffect(() => {
@@ -63,12 +63,12 @@ const EntriesPage = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">📚 Your Journal</h1>
+          <h1 className="text-3xl font-bold text-gray-800">📚 Your Writing</h1>
           <p className="text-gray-600 mt-1">Browse and revisit your writing journey</p>
         </div>
         <Link
           to="/entries/new"
-          className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-200 font-medium shadow-lg"
+          className="bg-brand-primary text-white px-6 py-3 rounded-lg hover:scale-105 transition-all duration-300 font-medium shadow-soft"
         >
           + New Entry
         </Link>
@@ -84,7 +84,7 @@ const EntriesPage = () => {
               placeholder="Search entries..."
               value={filters.search}
               onChange={(e) => handleFilterChange({ search: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300"
             />
           </div>
           
@@ -95,7 +95,7 @@ const EntriesPage = () => {
               placeholder="Filter by tag..."
               value={filters.tag}
               onChange={(e) => handleFilterChange({ tag: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300"
             />
           </div>
           
@@ -103,7 +103,7 @@ const EntriesPage = () => {
             <label className="block text-sm font-medium text-gray-700 mb-1">Actions</label>
             <button
               onClick={() => handleFilterChange({ search: '', tag: '' })}
-              className="w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-200"
+              className="w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:scale-105 transition-all duration-300"
             >
               Clear Filters
             </button>
@@ -134,7 +134,7 @@ const EntriesPage = () => {
           </p>
           <Link
             to="/entries/new"
-            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-200 font-medium"
+            className="bg-brand-primary text-white px-6 py-3 rounded-lg hover:scale-105 transition-all duration-300 font-medium"
           >
             Write Your First Entry
           </Link>
@@ -159,7 +159,7 @@ const EntriesPage = () => {
               <button
                 onClick={() => handlePageChange(pagination.page - 1)}
                 disabled={!pagination.hasPrevPage}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
+                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
               >
                 Previous
               </button>
@@ -171,7 +171,7 @@ const EntriesPage = () => {
               <button
                 onClick={() => handlePageChange(pagination.page + 1)}
                 disabled={!pagination.hasNextPage}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
+                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
               >
                 Next
               </button>

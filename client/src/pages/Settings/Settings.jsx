@@ -402,7 +402,7 @@ const Settings = () => {
                       type="text"
                       value={profileForm.name}
                       onChange={(e) => setProfileForm(prev => ({ ...prev, name: e.target.value }))}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300"
                       placeholder="Your name"
                     />
                   </div>
@@ -415,7 +415,7 @@ const Settings = () => {
                       type="email"
                       value={profileForm.email}
                       onChange={(e) => setProfileForm(prev => ({ ...prev, email: e.target.value }))}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300"
                       placeholder="your@email.com"
                     />
                   </div>
@@ -428,7 +428,7 @@ const Settings = () => {
                   <select
                     value={profileForm.timezone}
                     onChange={(e) => setProfileForm(prev => ({ ...prev, timezone: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300"
                   >
                     <option value="UTC">UTC</option>
                     <option value="America/New_York">Eastern Time</option>
@@ -446,7 +446,7 @@ const Settings = () => {
                     value={profileForm.bio}
                     onChange={(e) => setProfileForm(prev => ({ ...prev, bio: e.target.value }))}
                     rows="4"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300"
                     placeholder="Tell us a little about yourself..."
                     maxLength="500"
                   />
@@ -459,7 +459,7 @@ const Settings = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed transition duration-200 font-medium"
+                    className="px-6 py-3 bg-brand-primary text-white rounded-lg hover:bg-brand-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105 font-medium"
                   >
                     {loading ? 'Saving...' : 'Save Profile'}
                   </button>
@@ -485,7 +485,7 @@ const Settings = () => {
                     type="password"
                     value={passwordForm.currentPassword}
                     onChange={(e) => setPasswordForm(prev => ({ ...prev, currentPassword: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300"
                     placeholder="Enter current password"
                   />
                 </div>
@@ -499,7 +499,7 @@ const Settings = () => {
                       type="password"
                       value={passwordForm.newPassword}
                       onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300"
                       placeholder="Enter new password"
                     />
                     <p className="mt-1 text-sm text-gray-500">Minimum 6 characters</p>
@@ -513,7 +513,7 @@ const Settings = () => {
                       type="password"
                       value={passwordForm.confirmPassword}
                       onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300"
                       placeholder="Confirm new password"
                     />
                   </div>
@@ -541,7 +541,7 @@ const Settings = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed transition duration-200 font-medium"
+                    className="px-6 py-3 bg-brand-primary text-white rounded-lg hover:bg-brand-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105 font-medium"
                   >
                     {loading ? 'Updating...' : 'Update Password'}
                   </button>
@@ -626,7 +626,7 @@ const Settings = () => {
                   <p className="text-gray-600 mb-4">Smart features to help you write</p>
                   
                   <div className="space-y-4">
-                    <label className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition duration-200">
+                    <label className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-all duration-300">
                       <div>
                         <div className="font-medium text-gray-800 flex items-center space-x-2">
                           <span>💡 Enable Suggestion Prompts</span>
@@ -675,7 +675,7 @@ const Settings = () => {
                               setMessage({ type: 'success', text: 'Prompt cycle reset! You\'ll get new suggestions.' });
                               setTimeout(() => setMessage({ type: '', text: '' }), 3000);
                             }}
-                            className="ml-4 px-3 py-1.5 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600 transition duration-200 font-medium whitespace-nowrap"
+                            className="ml-4 px-3 py-1.5 bg-brand-primary text-white text-sm rounded-lg hover:bg-brand-secondary transition-all duration-300 hover:scale-105 font-medium whitespace-nowrap"
                           >
                             Reset Now
                           </button>
@@ -721,7 +721,7 @@ const Settings = () => {
                   <button
                     type="submit"
                     disabled={loading || preferences.promptCategories.length === 0}
-                    className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed transition duration-200 font-medium"
+                    className="px-6 py-3 bg-brand-primary text-white rounded-lg hover:bg-brand-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105 font-medium"
                   >
                     {loading ? 'Saving...' : 'Save Preferences'}
                   </button>

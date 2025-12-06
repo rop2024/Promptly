@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getRandomPrompts } from '../../config/stuckPrompts.js';
 import authService from '../../services/authService.js';
 import analyticsService from '../../services/analyticsService.js';
+import TimerWidget from '../Timer/TimerWidget.jsx';
 
 const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' }) => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
   const [timeSpent, setTimeSpent] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [startTime, setStartTime] = useState(null);
+  const [distractionFree, setDistractionFree] = useState(false);
 
   // Stuck prompts state
   const currentUser = authService.getCurrentUser();
@@ -486,7 +488,7 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
           
           {/* Time Recorder with Hover Controls */}
           <div className="group relative">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-5 py-3 rounded-xl border-2 border-blue-200 hover:border-blue-300 transition-all duration-200 cursor-pointer">
+            <div className="bg-gradient-to-r from-brand-accent-1 to-green-50 px-5 py-3 rounded-xl border-2 border-brand-primary/30 hover:border-brand-primary/50 transition-all duration-300 cursor-pointer hover:shadow-soft">
               <div className="flex items-center space-x-3">
                 <div className={`p-2 rounded-lg ${
                   isActive ? 'bg-green-100' : 'bg-gray-100'
@@ -505,12 +507,12 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
             </div>
             
             {/* Hover Controls */}
-            <div className="absolute top-full right-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+            <div className="absolute top-full right-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10">
               <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-2 flex space-x-2">
                 <button
                   type="button"
                   onClick={assistPrompt}
-                  className="assist-btn px-4 py-2 rounded-lg font-medium transition duration-200 flex items-center space-x-2 bg-purple-100 text-purple-700 hover:bg-purple-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                  className="assist-btn px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 bg-purple-100 text-purple-700 hover:bg-purple-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
                   aria-label="Insert writing prompt at cursor position"
                   aria-pressed="false"
                   tabIndex={0}
@@ -523,11 +525,12 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
                 <button
                   type="button"
                   onClick={() => setIsActive(!isActive)}
-                  className={`px-4 py-2 rounded-lg font-medium transition duration-200 flex items-center space-x-2 ${
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none ${
                     isActive 
                       ? 'bg-orange-100 text-orange-700 hover:bg-orange-200'
                       : 'bg-green-100 text-green-700 hover:bg-green-200'
                   }`}
+                  aria-label={isActive ? "Pause writing timer" : "Resume writing timer"}
                 >
                   {isActive ? (
                     <>
@@ -581,7 +584,7 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
                   }
                 }}
                 rows="12"
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none transition duration-200 ${
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary resize-none transition-all duration-300 ${
                   errors.content ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="Write your thoughts here... (Start writing, we'll ask for a title when you're done)"
@@ -624,7 +627,7 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 ${
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300 ${
                   errors.title ? 'border-red-500' : 'border-gray-300'
                 }`}
                 placeholder="Give your entry a title (optional)"
@@ -675,13 +678,13 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
                   onKeyDown={handleTagInput}
                   placeholder="Type a tag and press Enter (max 10)"
                   disabled={formData.tags.length >= 10}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300 disabled:bg-gray-100 disabled:cursor-not-allowed"
                 />
                 <button
                   type="button"
                   onClick={addTag}
                   disabled={!tagInput.trim() || formData.tags.length >= 10}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed transition duration-200 font-medium"
+                  className="px-4 py-2 bg-brand-primary text-white rounded-lg hover:bg-brand-secondary disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:scale-105 font-medium"
                 >
                   Add
                 </button>
@@ -692,21 +695,38 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
             </div>
           </div>
 
-          {/* Privacy Setting */}
-          <div className="flex items-center p-4 bg-gray-50 rounded-lg">
+          {/* Distraction-Free Mode Toggle */}
+          <div className="flex items-center p-4 bg-brand-accent-1/30 rounded-lg border border-brand-primary/20">
             <input
               type="checkbox"
-              id="isPublic"
-              name="isPublic"
-              checked={formData.isPublic}
-              onChange={handleChange}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              id="distractionFree"
+              checked={distractionFree}
+              onChange={(e) => setDistractionFree(e.target.checked)}
+              className="h-4 w-4 text-brand-primary focus:ring-brand-primary border-gray-300 rounded"
             />
-            <label htmlFor="isPublic" className="ml-3 block text-sm text-gray-700">
-              <span className="font-medium">Make this entry public</span>
-              <p className="text-gray-500">Other users will be able to read this entry</p>
+            <label htmlFor="distractionFree" className="ml-3 block text-sm text-gray-700">
+              <span className="font-medium">Distraction-Free Mode</span>
+              <p className="text-gray-500">Hide extra options and focus on writing</p>
             </label>
           </div>
+
+          {/* Privacy Setting */}
+          {!distractionFree && (
+            <div className="flex items-center p-4 bg-gray-50 rounded-lg">
+              <input
+                type="checkbox"
+                id="isPublic"
+                name="isPublic"
+                checked={formData.isPublic}
+                onChange={handleChange}
+                className="h-4 w-4 text-brand-primary focus:ring-brand-primary border-gray-300 rounded"
+              />
+              <label htmlFor="isPublic" className="ml-3 block text-sm text-gray-700">
+                <span className="font-medium">Make this entry public</span>
+                <p className="text-gray-500">Other users will be able to read this entry</p>
+              </label>
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
@@ -714,14 +734,14 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
               type="button"
               onClick={onCancel}
               disabled={isLoading}
-              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition duration-200 font-medium"
+              className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-all duration-300 font-medium"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading || !formData.content.trim()}
-              className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed transition duration-200 font-medium flex items-center"
+              className="px-6 py-3 bg-brand-primary text-white rounded-lg hover:scale-105 disabled:bg-gray-300 disabled:cursor-not-allowed disabled:hover:scale-100 transition-transform duration-300 font-medium flex items-center"
             >
               {isLoading ? (
                 <>
@@ -740,18 +760,20 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
           </div>
         </form>
       </div>
+      {/* End Editor Card */}
 
       {/* Side Notification */}
       {notification.show && (
         <div className="fixed top-20 right-4 z-50 animate-slide-in">
-          <div className="bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center space-x-3 border border-green-600">
+          <div className="bg-brand-primary text-white px-6 py-4 rounded-lg shadow-soft2 flex items-center space-x-3 border border-brand-secondary">
             <svg className="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span className="font-medium">{notification.message}</span>
             <button
               onClick={() => setNotification({ show: false, message: '' })}
-              className="ml-2 text-white hover:text-green-100 focus:outline-none"
+              className="ml-2 text-white hover:text-white/80 focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none transition-colors duration-300"
+              aria-label="Close notification"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
