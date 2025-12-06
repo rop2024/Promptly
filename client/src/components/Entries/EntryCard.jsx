@@ -12,9 +12,11 @@ const EntryCard = ({ entry, onEdit, onDelete, onView }) => {
     });
   };
 
-  const truncateContent = (content, maxLength = 200) => {
-    if (content.length <= maxLength) return content;
-    return content.substring(0, maxLength) + '...';
+  const truncateContent = (content, maxLength = 150) => {
+    if (!content) return '';
+    const cleanContent = content.trim();
+    if (cleanContent.length <= maxLength) return cleanContent;
+    return cleanContent.substring(0, maxLength).trim() + '...';
   };
 
   const formatTime = (seconds) => {
@@ -93,7 +95,7 @@ const EntryCard = ({ entry, onEdit, onDelete, onView }) => {
 
         {/* Content */}
         <div className="mb-4">
-          <p className="text-gray-600 leading-relaxed whitespace-pre-line">
+          <p className="text-gray-600 leading-relaxed break-words line-clamp-3">
             {truncateContent(entry.content)}
           </p>
         </div>
@@ -113,14 +115,14 @@ const EntryCard = ({ entry, onEdit, onDelete, onView }) => {
         )}
 
         {/* Footer */}
-        <div className="flex justify-between items-center text-sm text-gray-500 border-t pt-3">
-          <div className="flex items-center space-x-4">
-            <span>Created: {formatDate(entry.createdAt)}</span>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 text-sm text-gray-500 border-t pt-3">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span className="whitespace-nowrap">Created: {formatDate(entry.createdAt)}</span>
             {isRecentlyUpdated() && (
-              <span>Updated: {formatDate(entry.updatedAt)}</span>
+              <span className="whitespace-nowrap">Updated: {formatDate(entry.updatedAt)}</span>
             )}
             {formatTime(entry.timeSpent) && (
-              <span className="flex items-center text-indigo-600 font-medium">
+              <span className="flex items-center text-indigo-600 font-medium whitespace-nowrap">
                 <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -130,7 +132,7 @@ const EntryCard = ({ entry, onEdit, onDelete, onView }) => {
           </div>
           <Link
             to={`/entries/${entry.id}`}
-            className="text-blue-500 hover:text-blue-700 font-medium"
+            className="text-blue-500 hover:text-blue-700 font-medium whitespace-nowrap"
           >
             Read more →
           </Link>

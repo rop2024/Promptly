@@ -146,48 +146,40 @@ const Dashboard = ({ currentUser }) => {
         </div>
       </div>
 
-      {/* Quick Stats Summary */}
-      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl shadow-sm p-6 border border-indigo-200">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold text-gray-800">Quick Stats</h2>
-          <Link
-            to="/stats"
-            className="text-indigo-600 hover:text-indigo-800 font-medium text-sm flex items-center"
-          >
-            View All Stats
-            <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-indigo-600">{stats?.totalEntries || 0}</div>
-            <div className="text-xs text-gray-600">Entries</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">{streakData?.currentStreak || 0}</div>
-            <div className="text-xs text-gray-600">Streak 🔥</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-purple-600">{stats?.totalWords ? Math.floor(stats.totalWords / 1000) + 'k' : 0}</div>
-            <div className="text-xs text-gray-600">Words</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-orange-600">{stats?.averageWords || 0}</div>
-            <div className="text-xs text-gray-600">Avg/Entry</div>
-          </div>
-        </div>
-      </div>
-
+      {/* Quick Stats and Writing Streak Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Daily Prompt */}
-        <div>
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Daily Prompt</h2>
-          <DailyPrompt 
-            onPromptCompleted={handlePromptCompleted}
-            compact={false}
-          />
+        {/* Quick Stats Summary */}
+        <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl shadow-sm p-6 border border-indigo-200">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold text-gray-800">Quick Stats</h2>
+            <Link
+              to="/stats"
+              className="text-indigo-600 hover:text-indigo-800 font-medium text-sm flex items-center"
+            >
+              View All Stats
+              <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-indigo-600">{stats?.totalEntries || 0}</div>
+              <div className="text-xs text-gray-600">Entries</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">{streakData?.currentStreak || 0}</div>
+              <div className="text-xs text-gray-600">Streak 🔥</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">{stats?.totalWords ? Math.floor(stats.totalWords / 1000) + 'k' : 0}</div>
+              <div className="text-xs text-gray-600">Words</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-orange-600">{stats?.averageWords || 0}</div>
+              <div className="text-xs text-gray-600">Avg/Entry</div>
+            </div>
+          </div>
         </div>
 
         {/* Writing Streak */}
@@ -195,6 +187,15 @@ const Dashboard = ({ currentUser }) => {
           <h2 className="text-xl font-bold text-gray-800 mb-4">Writing Streak</h2>
           <StreakDisplay compact={false} />
         </div>
+      </div>
+
+      {/* Daily Prompt - Full Width */}
+      <div>
+        <h2 className="text-xl font-bold text-gray-800 mb-4">Daily Prompt</h2>
+        <DailyPrompt 
+          onPromptCompleted={handlePromptCompleted}
+          compact={false}
+        />
       </div>
 
       {/* Recent Entries */}
