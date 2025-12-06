@@ -22,10 +22,12 @@ const EntriesPage = () => {
     try {
       setLoading(true);
       const result = await entryService.getEntries(filters);
-      setEntries(result.data);
-      setPagination(result.pagination);
+      setEntries(result.data?.data || []);
+      setPagination(result.data?.pagination || null);
     } catch (error) {
       console.error('Error loading entries:', error);
+      setEntries([]);
+      setPagination(null);
     } finally {
       setLoading(false);
     }
