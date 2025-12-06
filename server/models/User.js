@@ -175,7 +175,7 @@ userSchema.statics.recalculateStreak = async function(userId) {
   
   // Get all unique dates the user has written entries (sorted)
   const writingDates = await Entry.aggregate([
-    { $match: { user: mongoose.Types.ObjectId(userId) } },
+    { $match: { user: new mongoose.Types.ObjectId(userId) } },
     {
       $project: {
         date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }

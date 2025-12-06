@@ -96,78 +96,86 @@ const StreakDisplay = ({ compact = false, onStreakUpdate }) => {
     );
   }
 
-  // Full version
+  // Full version - Horizontal compact layout
   return (
-    <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl shadow-lg p-6 border border-orange-200">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold text-gray-800">Writing Streak</h2>
-        <button
-          onClick={() => setShowCalendar(!showCalendar)}
-          className="text-sm text-orange-600 hover:text-orange-800"
-        >
-          {showCalendar ? 'Hide Calendar' : 'Show Calendar'}
-        </button>
+    <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl shadow-lg border border-orange-200">
+      <div className="p-4">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
+          {/* Main Streak Display */}
+          <div className="flex items-center space-x-4">
+            <div className={`text-5xl ${getFlameColor(streakData.currentStreak)}`}>
+              🔥
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-gray-800">
+                {streakData.currentStreak}
+              </div>
+              <div className="text-sm text-gray-600">
+                {streakData.currentStreak === 0 ? 'No streak yet' : `Day${streakData.currentStreak !== 1 ? 's' : ''} in a row`}
+              </div>
+              <div className="text-xs text-gray-500">
+                {getStreakMessage(streakData.currentStreak)}
+              </div>
+            </div>
+          </div>
+
+          {/* Stats Grid */}
+          <div className="flex space-x-4">
+            <div className="bg-white rounded-lg p-3 text-center shadow-sm min-w-[100px]">
+              <div className="text-xl font-bold text-purple-600">
+                {streakData.longestStreak}
+              </div>
+              <div className="text-xs text-gray-600">Longest</div>
+            </div>
+            <div className="bg-white rounded-lg p-3 text-center shadow-sm min-w-[100px]">
+              <div className="text-xl font-bold text-blue-600">
+                {streakData.totalEntries}
+              </div>
+              <div className="text-xs text-gray-600">Total Entries</div>
+            </div>
+          </div>
+
+          {/* Milestone Progress */}
+          {streakData.nextMilestone && (
+            <div className="bg-white rounded-lg p-3 shadow-sm min-w-[200px]">
+              <div className="flex justify-between items-center text-xs mb-1">
+                <span className="text-gray-600">Next milestone:</span>
+                <span className="font-semibold text-orange-600">
+                  {streakData.nextMilestone} days
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-orange-500 h-2 rounded-full transition-all duration-500"
+                  style={{ 
+                    width: `${Math.min((streakData.currentStreak / streakData.nextMilestone) * 100, 100)}%` 
+                  }}
+                ></div>
+              </div>
+            </div>
+          )}
+
+          {/* Action Button */}
+          <button
+            onClick={() => setShowCalendar(!showCalendar)}
+            className="px-4 py-2 text-sm bg-white text-orange-600 hover:bg-orange-100 rounded-lg border border-orange-300 transition duration-200 font-medium"
+          >
+            {showCalendar ? 'Hide Calendar' : 'Show Calendar'}
+          </button>
+        </div>
+
+        {/* Warning if not written today */}
+        {!streakData.writtenToday && (
+          <div className="mt-3 bg-yellow-50 border border-yellow-200 rounded-lg p-2 text-center">
+            <div className="text-yellow-700 text-sm">
+              ✏️ Write an entry today to continue your streak!
+            </div>
+          </div>
+        )}
       </div>
-
-      <div className="text-center mb-6">
-        <div className={`text-6xl mb-2 ${getFlameColor(streakData.currentStreak)}`}>
-          🔥
-        </div>
-        <div className="text-4xl font-bold text-gray-800 mb-2">
-          {streakData.currentStreak}
-        </div>
-        <div className="text-lg text-gray-600 mb-1">
-          {streakData.currentStreak === 0 ? 'No streak yet' : `Day${streakData.currentStreak !== 1 ? 's' : ''} in a row`}
-        </div>
-        <div className="text-sm text-gray-500">
-          {getStreakMessage(streakData.currentStreak)}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <div className="bg-white rounded-lg p-3 text-center shadow-sm">
-          <div className="text-2xl font-bold text-purple-600">
-            {streakData.longestStreak}
-          </div>
-          <div className="text-xs text-gray-600">Longest Streak</div>
-        </div>
-        <div className="bg-white rounded-lg p-3 text-center shadow-sm">
-          <div className="text-2xl font-bold text-blue-600">
-            {streakData.totalEntries}
-          </div>
-          <div className="text-xs text-gray-600">Total Entries</div>
-        </div>
-      </div>
-
-      {streakData.nextMilestone && (
-        <div className="bg-white rounded-lg p-3 mb-4 shadow-sm">
-          <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-600">Next milestone:</span>
-            <span className="font-semibold text-orange-600">
-              {streakData.nextMilestone} days
-            </span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-            <div 
-              className="bg-orange-500 h-2 rounded-full transition-all duration-500"
-              style={{ 
-                width: `${Math.min((streakData.currentStreak / streakData.nextMilestone) * 100, 100)}%` 
-              }}
-            ></div>
-          </div>
-        </div>
-      )}
-
-      {!streakData.writtenToday && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-center">
-          <div className="text-yellow-700 text-sm">
-            ✏️ Write an entry today to continue your streak!
-          </div>
-        </div>
-      )}
 
       {showCalendar && (
-        <div className="mt-4">
+        <div className="mt-4 pt-4 border-t border-orange-200">
           <StreakCalendar />
         </div>
       )}
@@ -209,8 +217,8 @@ const StreakCalendar = () => {
   }
 
   return (
-    <div className="bg-white rounded-lg p-4 shadow-sm">
-      <h3 className="text-lg font-semibold mb-3">30-Day Activity</h3>
+    <div className="bg-white rounded-lg p-3 shadow-sm">
+      <h3 className="text-base font-semibold mb-2">30-Day Activity</h3>
       <div className="grid grid-cols-7 gap-1">
         {days.map(day => {
           const hasEntry = calendarData.activity[day];
