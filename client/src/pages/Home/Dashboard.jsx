@@ -26,9 +26,9 @@ const Dashboard = ({ currentUser }) => {
       const entriesResult = await entryService.getEntries({ limit: 5 });
       setRecentEntries(entriesResult.data?.data || []); // data.data is the array
 
-      // Load streak data
+      // Load streak data (streakService already returns response.data)
       const streakResult = await streakService.getStreak();
-      setStreakData(streakResult.data?.data || null);
+      setStreakData(streakResult?.data || null);
 
       // Load prompt data
       const promptResult = await promptService.getTodaysPrompt();

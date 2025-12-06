@@ -20,9 +20,9 @@ const Stats = ({ currentUser }) => {
       const statsResult = await entryService.getStats();
       setStats(statsResult.data?.data || null);
 
-      // Load streak data
+      // Load streak data (streakService already returns response.data)
       const streakResult = await streakService.getStreak();
-      setStreakData(streakResult.data?.data || null);
+      setStreakData(streakResult?.data || null);
 
     } catch (error) {
       console.error('Error loading stats data:', error);

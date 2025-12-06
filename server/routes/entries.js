@@ -238,10 +238,11 @@ router.get('/stats/overview', async (req, res, next) => {
     const totalEntries = await Entry.countDocuments({ user: req.user.id });
     
     // Get all entries for word count and prompt stats
-    const allEntries = await Entry.find({ user: req.user.id }).select('title content');
+    const allEntries = await Entry.find({ user: req.user.id }).select('title content timeSpent');
     
-    // Calculate total words
+    // Calculate total words and time
     let totalWords = 0;
+    let totalTimeSpent = 0;
     const promptsWritten = [];
     
     allEntries.forEach(entry => {
@@ -249,14 +250,18 @@ router.get('/stats/overview', async (req, res, next) => {
       const words = entry.content.trim().split(/\s+/).filter(word => word.length > 0);
       totalWords += words.length;
       
+      // Sum up time spent
+      totalTimeSpent += entry.timeSpent || 0;
+      
       // Track prompts (using title as prompt identifier)
       if (entry.title && !promptsWritten.includes(entry.title)) {
         promptsWritten.push(entry.title);
       }
     });
     
-    // Calculate average words per entry
+    // Calculate averages
     const averageWords = totalEntries > 0 ? Math.round(totalWords / totalEntries) : 0;
+    const averageTimeSpent = totalEntries > 0 ? Math.round(totalTimeSpent / totalEntries) : 0;
     
     // Entries per month (last 6 months)
     const sixMonthsAgo = new Date();
@@ -293,6 +298,8 @@ router.get('/stats/overview', async (req, res, next) => {
         totalEntries,
         totalWords,
         averageWords,
+        totalTimeSpent,
+        averageTimeSpent,
         uniquePrompts: promptsWritten.length,
         monthlyStats,
         recentActivity: recentEntries
