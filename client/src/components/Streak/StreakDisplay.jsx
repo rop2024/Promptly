@@ -207,48 +207,132 @@ const StreakCalendar = () => {
     return <div className="text-center py-4">Loading calendar...</div>;
   }
 
-  // Generate last 30 days for calendar
-  const days = [];
+  // Get the current month and organize days into weeks
   const today = new Date();
-  for (let i = 29; i >= 0; i--) {
-    const date = new Date(today);
-    date.setDate(date.getDate() - i);
-    days.push(date.toISOString().split('T')[0]);
+  const currentMonth = today.getMonth();
+  const currentYear = today.getFullYear();
+  
+  // Get first day of current month
+  const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+  const startDayOfWeek = firstDayOfMonth.getDay(); // 0 = Sunday
+  
+  // Get last day of current month
+  const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0);
+  const totalDays = lastDayOfMonth.getDate();
+  
+  // Create calendar grid
+  const weeks = [];
+  let currentWeek = [];
+  
+  // Add empty cells for days before month starts
+  for (let i = 0; i < startDayOfWeek; i++) {
+    currentWeek.push(null);
   }
+  
+  // Add all days of the month
+  for (let day = 1; day <= totalDays; day++) {
+    const date = new Date(currentYear, currentMonth, day);
+    const dateString = date.toISOString().split('T')[0];
+    currentWeek.push({ day, dateString });
+    
+    // If week is complete (Sunday to Saturday), start new week
+    if (currentWeek.length === 7) {
+      weeks.push(currentWeek);
+      currentWeek = [];
+    }
+  }
+  
+  // Add remaining days to last week
+  if (currentWeek.length > 0) {
+    while (currentWeek.length < 7) {
+      currentWeek.push(null);
+    }
+    weeks.push(currentWeek);
+  }
+  
+  // Week number calculation
+  const getWeekNumber = (date) => {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const dayNum = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+  };
+  
+  const monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
+  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
-    <div className="bg-white rounded-lg p-2 shadow-sm">
-      <h3 className="text-xs font-semibold mb-2 text-gray-700">30-Day Activity</h3>
-      <div className="grid grid-cols-15 gap-1">
-        {days.map(day => {
-          const hasEntry = calendarData.activity[day];
-          const isToday = day === streakService.getTodayDateString();
+    <div className="bg-white rounded-lg p-3 shadow-sm">
+      <h3 className="text-sm font-semibold mb-3 text-gray-700 text-center">
+        {monthNames[currentMonth]} {currentYear}
+      </h3>
+      
+      {/* Calendar Grid */}
+      <div className="space-y-1">
+        {/* Header Row - Day Names */}
+        <div className="grid grid-cols-8 gap-1 mb-2">
+          <div className="text-[9px] font-semibold text-gray-400 text-center">Wk</div>
+          {dayNames.map(day => (
+            <div key={day} className="text-[9px] font-semibold text-gray-600 text-center">
+              {day}
+            </div>
+          ))}
+        </div>
+        
+        {/* Calendar Weeks */}
+        {weeks.map((week, weekIndex) => {
+          const firstDayInWeek = week.find(d => d !== null);
+          const weekNumber = firstDayInWeek ? getWeekNumber(new Date(firstDayInWeek.dateString)) : '';
           
           return (
-            <div
-              key={day}
-              className="flex flex-col items-center"
-            >
-              <div
-                className={`w-5 h-5 rounded text-[10px] flex items-center justify-center transition-all duration-300 ${
-                  isToday 
-                    ? 'bg-brand-primary/20 text-brand-primary ring-1 ring-brand-primary font-semibold' 
-                    : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
-                }`}
-                title={`${day}${hasEntry ? ' - Entry written' : ''}`}
-              >
-                {new Date(day).getDate()}
+            <div key={weekIndex} className="grid grid-cols-8 gap-1">
+              {/* Week Number */}
+              <div className="text-[9px] text-gray-400 flex items-center justify-center font-medium">
+                {weekNumber}
               </div>
-              {hasEntry && (
-                <div className="w-1 h-1 bg-brand-primary rounded-full mt-0.5" title="Entry written"></div>
-              )}
+              
+              {/* Days */}
+              {week.map((dayObj, dayIndex) => {
+                if (!dayObj) {
+                  return <div key={`empty-${dayIndex}`} className="w-6 h-6"></div>;
+                }
+                
+                const hasEntry = calendarData.activity[dayObj.dateString];
+                const isToday = dayObj.dateString === streakService.getTodayDateString();
+                
+                return (
+                  <div
+                    key={dayObj.dateString}
+                    className={`w-6 h-6 rounded text-[10px] flex items-center justify-center transition-all duration-200 ${
+                      isToday 
+                        ? 'bg-brand-primary text-white font-bold ring-2 ring-brand-primary ring-offset-1' 
+                        : hasEntry
+                        ? 'bg-brand-primary/80 text-white font-semibold hover:bg-brand-primary'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                    title={`${dayObj.dateString}${hasEntry ? ' - Entry written' : ''}`}
+                  >
+                    {dayObj.day}
+                  </div>
+                );
+              })}
             </div>
           );
         })}
       </div>
-      <div className="flex items-center justify-center text-[10px] text-gray-500 mt-2 pt-2 border-t border-gray-100">
-        <div className="w-1 h-1 bg-brand-primary rounded-full mr-1.5"></div>
-        <span>Entry written</span>
+      
+      {/* Legend */}
+      <div className="flex items-center justify-center gap-3 text-[10px] text-gray-500 mt-3 pt-3 border-t border-gray-100">
+        <div className="flex items-center gap-1">
+          <div className="w-3 h-3 bg-brand-primary rounded"></div>
+          <span>Today</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="w-3 h-3 bg-brand-primary/80 rounded"></div>
+          <span>Entry written</span>
+        </div>
       </div>
     </div>
   );

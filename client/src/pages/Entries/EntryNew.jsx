@@ -184,8 +184,8 @@ const EntryNew = () => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-        <div className="collapse" style={{ height: showTips ? 'auto' : '0' }}>
-          <div className="mt-2 bg-white rounded-lg p-4 border border-brand-primary/30 shadow-sm">
+        {showTips && (
+          <div className="mt-2 bg-white rounded-lg p-4 border border-brand-primary/30 shadow-sm transition-all duration-300">
             <ul className="text-gray-600 space-y-2">
               <li className="flex items-center">
                 <span className="w-2 h-2 bg-brand-primary rounded-full mr-3"></span>
@@ -205,7 +205,7 @@ const EntryNew = () => {
               </li>
             </ul>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Editor Component */}
