@@ -27,6 +27,7 @@ server/.env
 # Documentation (internal/temporary)
 HOW_TO_ADD_PROMPTS.md
 ARCHITECTURE.md
+AI_DESIGN_GUIDE.md
 
 # Logs
 logs
