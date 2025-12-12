@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import authService from '../../services/authService.js';
+import { Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ const Login = () => {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -108,17 +110,30 @@ const Login = () => {
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   Password
                 </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  autoComplete="current-password"
-                  required
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-brand-primary focus:border-brand-primary focus:z-10 sm:text-sm transition-all duration-300"
-                  placeholder="Enter your password"
-                />
+                <div className="relative mt-1">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="current-password"
+                    required
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="appearance-none relative block w-full px-3 py-3 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-brand-primary focus:border-brand-primary focus:z-10 sm:text-sm transition-all duration-300"
+                    placeholder="Enter your password"
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    ) : (
+                      <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
 
