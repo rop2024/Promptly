@@ -4,7 +4,7 @@
 
 Promptly is a thoughtful writing platform designed to help you reclaim control over your thoughts in an era of endless social media feeds and constant information bombardment. By encouraging deliberate pauses and reflective writing, Promptly helps you process, understand, and illuminate insights that might otherwise be lost in the noise.
 
-**[🚀 Try Promptly Now](https://promptly-023-93lstiw9m-rohits-projects-7d42b156.vercel.app)**
+**[🚀 Try Promptly Now](https://promptly-023.vercel.app/login)**
 
 ---
 
