@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Eye, Edit, Trash2, Clock } from 'lucide-react';
+import { Eye, Edit, Trash2 } from 'lucide-react';
 
 const EntryCard = ({ entry, onEdit, onDelete, onView }) => {
   const formatDate = (dateString) => {
@@ -18,14 +18,6 @@ const EntryCard = ({ entry, onEdit, onDelete, onView }) => {
     const cleanContent = content.trim();
     if (cleanContent.length <= maxLength) return cleanContent;
     return cleanContent.substring(0, maxLength).trim() + '...';
-  };
-
-  const formatTime = (seconds) => {
-    if (!seconds || seconds === 0) return null;
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    if (mins === 0) return `${secs}s`;
-    return `${mins}m ${secs}s`;
   };
 
   const isRecentlyUpdated = () => {
@@ -115,12 +107,6 @@ const EntryCard = ({ entry, onEdit, onDelete, onView }) => {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 text-xs text-gray-500 border-t border-gray-100 pt-3">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <span className="whitespace-nowrap">{formatDate(entry.createdAt)}</span>
-            {formatTime(entry.timeSpent) && (
-              <span className="flex items-center text-brand-primary font-medium whitespace-nowrap">
-                <Clock className="w-4 h-4 mr-1" />
-                {formatTime(entry.timeSpent)}
-              </span>
-            )}
           </div>
           <Link
             to={`/entries/${entry.id}`}

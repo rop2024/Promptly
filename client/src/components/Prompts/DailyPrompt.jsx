@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Lightbulb, RefreshCw, SkipForward, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import promptService from '../../services/promptService.js';
-import TimerWidget from '../Timer/TimerWidget.jsx';
 
 const CATEGORY_ICONS = {
   reflection: '🤔',
@@ -299,11 +298,6 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
           placeholder="Write your response here... (This will create a new entry)"
         />
         
-        {/* Timer Widget */}
-        <div className="mt-4 flex justify-center">
-          <TimerWidget showControls={true} />
-        </div>
-
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0 sm:space-x-4 mt-6">
           <div className="flex space-x-3 w-full sm:w-auto">

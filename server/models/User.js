@@ -187,12 +187,10 @@ userSchema.methods.getCurrentDateString = function() {
   return new Date().toISOString().split('T')[0];
 };
 
-// Static method to calculate level and XP based on words and time
-userSchema.statics.calculateLevel = function(totalWords, totalTimeSpent) {
-  // XP calculation: 1 XP per word + 1 XP per 10 seconds of writing
-  const wordXP = totalWords;
-  const timeXP = Math.floor(totalTimeSpent / 10);
-  const totalXP = wordXP + timeXP;
+// Static method to calculate level and XP based on words
+userSchema.statics.calculateLevel = function(totalWords) {
+  // XP calculation: 1 XP per word
+  const totalXP = totalWords;
   
   // Level calculation: exponential curve
   // Level 1: 0 XP

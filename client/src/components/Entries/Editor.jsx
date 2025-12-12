@@ -2,23 +2,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getRandomPrompts } from '../../config/stuckPrompts.js';
 import authService from '../../services/authService.js';
 import analyticsService from '../../services/analyticsService.js';
-import TimerWidget from '../Timer/TimerWidget.jsx';
 
 const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' }) => {
   const [formData, setFormData] = useState({
     title: '',
     content: '',
     isPublic: false,
-    timeSpent: 0,
     tags: []
   });
 
   const [errors, setErrors] = useState({});
   const [tagInput, setTagInput] = useState('');
   const [notification, setNotification] = useState({ show: false, message: '' });
-  const [timeSpent, setTimeSpent] = useState(0);
-  const [isActive, setIsActive] = useState(false);
-  const [startTime, setStartTime] = useState(null);
   const [distractionFree, setDistractionFree] = useState(false);
 
   // Stuck prompts state
@@ -51,35 +46,10 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
         title: entry.title || '',
         content: entry.content || '',
         isPublic: entry.isPublic || false,
-        timeSpent: entry.timeSpent || 0,
         tags: entry.tags || []
       });
-      setTimeSpent(entry.timeSpent || 0);
     }
   }, [entry]);
-
-  // Time tracking effect
-  useEffect(() => {
-    let interval = null;
-    
-    if (isActive) {
-      interval = setInterval(() => {
-        setTimeSpent(prev => prev + 1);
-      }, 1000);
-    } else if (!isActive && timeSpent !== 0) {
-      clearInterval(interval);
-    }
-    
-    return () => clearInterval(interval);
-  }, [isActive]);
-
-  // Start timer when user begins typing
-  useEffect(() => {
-    if (formData.content.length > 0 && !isActive && !startTime) {
-      setIsActive(true);
-      setStartTime(Date.now());
-    }
-  }, [formData.content]);
 
   // Initialize and shuffle stuck prompts pool once per session
   useEffect(() => {
@@ -401,12 +371,6 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
     }
   };
 
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
 
 
   const [showTitlePrompt, setShowTitlePrompt] = useState(false);
@@ -419,9 +383,6 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
       setShowTitlePrompt(true);
       return;
     }
-    
-    // Stop timer
-    setIsActive(false);
     
     // Validation
     const newErrors = {};
@@ -439,11 +400,10 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
     // If no title provided, generate one from content
     const finalFormData = {
       ...formData,
-      title: formData.title.trim() || formData.content.substring(0, 50).trim() + '...',
-      timeSpent
+      title: formData.title.trim() || formData.content.substring(0, 50).trim() + '...'
     };
 
-    // Include time spent in submission
+    // Submit the form data
     onSubmit(finalFormData);
   };
 
@@ -485,73 +445,6 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
           <h2 className="text-2xl font-bold text-gray-800">
             {mode === 'edit' ? 'Edit Entry' : 'Write New Entry'}
           </h2>
-          
-          {/* Time Recorder with Hover Controls */}
-          <div className="group relative">
-            <div className="bg-gradient-to-r from-brand-accent-1 to-green-50 px-5 py-3 rounded-xl border-2 border-brand-primary/30 hover:border-brand-primary/50 transition-all duration-300 cursor-pointer hover:shadow-soft">
-              <div className="flex items-center space-x-3">
-                <div className={`p-2 rounded-lg ${
-                  isActive ? 'bg-green-100' : 'bg-gray-100'
-                }`}>
-                  <svg className={`w-6 h-6 ${
-                    isActive ? 'text-green-600 animate-pulse' : 'text-gray-400'
-                  }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div>
-                  <div className="text-xs text-gray-500 font-medium">Writing Time</div>
-                  <div className="text-2xl font-bold text-gray-800 tabular-nums">{formatTime(timeSpent)}</div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Hover Controls */}
-            <div className="absolute top-full right-0 mt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-10">
-              <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-2 flex space-x-2">
-                <button
-                  type="button"
-                  onClick={assistPrompt}
-                  className="assist-btn px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 bg-purple-100 text-purple-700 hover:bg-purple-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-                  aria-label="Insert writing prompt at cursor position"
-                  aria-pressed="false"
-                  tabIndex={0}
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                  </svg>
-                  <span>Assist</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setIsActive(!isActive)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:outline-none ${
-                    isActive 
-                      ? 'bg-orange-100 text-orange-700 hover:bg-orange-200'
-                      : 'bg-green-100 text-green-700 hover:bg-green-200'
-                  }`}
-                  aria-label={isActive ? "Pause writing timer" : "Resume writing timer"}
-                >
-                  {isActive ? (
-                    <>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <span>Pause</span>
-                    </>
-                  ) : (
-                    <>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <span>Resume</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">

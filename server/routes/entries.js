@@ -238,20 +238,16 @@ router.get('/stats/overview', async (req, res, next) => {
     const totalEntries = await Entry.countDocuments({ user: req.user.id });
     
     // Get all entries for word count and prompt stats
-    const allEntries = await Entry.find({ user: req.user.id }).select('title content timeSpent');
+    const allEntries = await Entry.find({ user: req.user.id }).select('title content');
     
-    // Calculate total words and time
+    // Calculate total words
     let totalWords = 0;
-    let totalTimeSpent = 0;
     const promptsWritten = [];
     
     allEntries.forEach(entry => {
       // Count words in content
       const words = entry.content.trim().split(/\s+/).filter(word => word.length > 0);
       totalWords += words.length;
-      
-      // Sum up time spent
-      totalTimeSpent += entry.timeSpent || 0;
       
       // Track prompts (using title as prompt identifier)
       if (entry.title && !promptsWritten.includes(entry.title)) {
@@ -261,7 +257,6 @@ router.get('/stats/overview', async (req, res, next) => {
     
     // Calculate averages
     const averageWords = totalEntries > 0 ? Math.round(totalWords / totalEntries) : 0;
-    const averageTimeSpent = totalEntries > 0 ? Math.round(totalTimeSpent / totalEntries) : 0;
     
     // Entries per month (last 6 months)
     const sixMonthsAgo = new Date();
@@ -294,7 +289,7 @@ router.get('/stats/overview', async (req, res, next) => {
 
     // Calculate level and XP
     const User = (await import('../models/User.js')).default;
-    const levelInfo = User.calculateLevel(totalWords, totalTimeSpent);
+    const levelInfo = User.calculateLevel(totalWords);
     
     // Update user's level and XP in database
     await User.findByIdAndUpdate(req.user.id, {
@@ -308,8 +303,6 @@ router.get('/stats/overview', async (req, res, next) => {
         totalEntries,
         totalWords,
         averageWords,
-        totalTimeSpent,
-        averageTimeSpent,
         uniquePrompts: promptsWritten.length,
         monthlyStats,
         recentActivity: recentEntries,
