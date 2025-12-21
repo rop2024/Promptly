@@ -32,15 +32,23 @@ const streakService = {
       return { currentStreak: 0, longestStreak: 0, writtenToday: false };
     }
 
+    // Helper function to format date as YYYY-MM-DD in local time
+    const formatLocalDate = (date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
     // Get unique dates from entries
     const dateSet = new Set();
     entries.forEach(entry => {
-      const dateStr = new Date(entry.createdAt).toISOString().split('T')[0];
+      const dateStr = formatLocalDate(new Date(entry.createdAt));
       dateSet.add(dateStr);
     });
 
     const dates = Array.from(dateSet).sort();
-    const today = new Date().toISOString().split('T')[0];
+    const today = formatLocalDate(new Date());
 
     // Calculate streaks
     let currentStreak = 0;
@@ -53,7 +61,7 @@ const streakService = {
       const currentDate = new Date(dates[dates.length - 1 - i]); // Start from most recent
       const expectedDate = new Date(checkDate);
       
-      if (currentDate.toISOString().split('T')[0] === expectedDate.toISOString().split('T')[0]) {
+      if (formatLocalDate(currentDate) === formatLocalDate(expectedDate)) {
         currentStreak++;
         checkDate.setDate(checkDate.getDate() - 1);
       } else {
@@ -87,15 +95,29 @@ const streakService = {
 
   // Utility to get today's date string
   getTodayDateString: () => {
-    return new Date().toISOString().split('T')[0];
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   },
 
   // Check if user has written today
   hasWrittenToday: (entries) => {
-    const today = new Date().toISOString().split('T')[0];
-    return entries.some(entry => 
-      new Date(entry.createdAt).toISOString().split('T')[0] === today
-    );
+    const today = (() => {
+      const date = new Date();
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    })();
+    return entries.some(entry => {
+      const entryDate = new Date(entry.createdAt);
+      const entryYear = entryDate.getFullYear();
+      const entryMonth = String(entryDate.getMonth() + 1).padStart(2, '0');
+      const entryDay = String(entryDate.getDate()).padStart(2, '0');
+      return `${entryYear}-${entryMonth}-${entryDay}` === today;
+    });
   }
 };
 

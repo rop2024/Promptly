@@ -359,8 +359,7 @@ const DailyPrompt = ({ onPromptCompleted, compact = false }) => {
           </button>
           
           <div 
-            className="collapse"
-            style={{ height: showAbout ? 'auto' : '0' }}
+            className={`overflow-hidden transition-all duration-300 ease-in-out ${showAbout ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
           >
             <div className="mt-3 text-sm text-gray-600 space-y-2">
               <p>

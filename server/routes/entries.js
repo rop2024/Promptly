@@ -3,6 +3,7 @@ import { body, validationResult, param } from 'express-validator';
 import Entry from '../models/Entry.js';
 import { protect } from '../middleware/auth.js';
 import ErrorResponse from '../utils/errorResponse.js';
+import { decrypt } from '../utils/encryption.js';
 
 const router = express.Router();
 
@@ -51,25 +52,29 @@ router.get('/', async (req, res, next) => {
       }
     }
     
-    // Search in title and content
-    if (req.query.search) {
-      filter.$or = [
-        { title: { $regex: req.query.search, $options: 'i' } },
-        { content: { $regex: req.query.search, $options: 'i' } }
-      ];
-    }
+    // Search in title and content (disabled due to encryption)
+    // Note: Searching encrypted data is not supported
+    // if (req.query.search) {
+    //   filter.$or = [
+    //     { title: { $regex: req.query.search, $options: 'i' } },
+    //     { content: { $regex: req.query.search, $options: 'i' } }
+    //   ];
+    // }
 
     const entries = await Entry.find(filter)
       .sort({ createdAt: -1 })
       .limit(limit)
       .skip(startIndex);
 
+    // Decrypt entries for client response
+    const decryptedEntries = entries.map(entry => entry.toClientFormat());
+
     const total = await Entry.countDocuments(filter);
     const totalPages = Math.ceil(total / limit);
 
     res.status(200).json({
       success: true,
-      count: entries.length,
+      count: decryptedEntries.length,
       pagination: {
         page,
         totalPages,
@@ -77,7 +82,7 @@ router.get('/', async (req, res, next) => {
         hasNextPage: page < totalPages,
         hasPrevPage: page > 1
       },
-      data: entries.map(entry => entry.toClientFormat())
+      data: decryptedEntries
     });
   } catch (error) {
     next(error);
@@ -238,13 +243,16 @@ router.get('/stats/overview', async (req, res, next) => {
     const totalEntries = await Entry.countDocuments({ user: req.user.id });
     
     // Get all entries for word count and prompt stats
-    const allEntries = await Entry.find({ user: req.user.id }).select('title content');
+    const allEntries = await Entry.find({ user: req.user.id });
+    
+    // Decrypt entries for processing
+    const decryptedEntries = allEntries.map(entry => entry.toClientFormat());
     
     // Calculate total words
     let totalWords = 0;
     const promptsWritten = [];
     
-    allEntries.forEach(entry => {
+    decryptedEntries.forEach(entry => {
       // Count words in content
       const words = entry.content.trim().split(/\s+/).filter(word => word.length > 0);
       totalWords += words.length;
@@ -282,10 +290,15 @@ router.get('/stats/overview', async (req, res, next) => {
     ]);
 
     // Recent activity
-    const recentEntries = await Entry.find({ user: req.user.id })
+    const recentEntriesRaw = await Entry.find({ user: req.user.id })
       .sort({ updatedAt: -1 })
-      .limit(5)
-      .select('title updatedAt');
+      .limit(5);
+    
+    const recentEntries = recentEntriesRaw.map(entry => ({
+      id: entry._id,
+      title: decrypt(entry.title),
+      updatedAt: entry.updatedAt
+    }));
 
     // Calculate level and XP
     const User = (await import('../models/User.js')).default;

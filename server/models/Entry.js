@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { encrypt, decrypt } from '../utils/encryption.js';
 
 const entrySchema = new mongoose.Schema({
   title: {
@@ -34,6 +35,17 @@ const entrySchema = new mongoose.Schema({
 // Index for better query performance
 entrySchema.index({ user: 1, createdAt: -1 });
 entrySchema.index({ user: 1, countsForStreak: 1 });
+
+// Encrypt sensitive data before saving
+entrySchema.pre('save', function(next) {
+  if (this.isModified('title') && this.title) {
+    this.title = encrypt(this.title);
+  }
+  if (this.isModified('content') && this.content) {
+    this.content = encrypt(this.content);
+  }
+  next();
+});
 
 // Update user's writing streak when a new entry is created
 entrySchema.post('save', async function() {
@@ -78,8 +90,8 @@ entrySchema.methods.toClientFormat = function() {
   
   return {
     id: obj._id,
-    title: obj.title,
-    content: obj.content,
+    title: decrypt(obj.title),
+    content: decrypt(obj.content),
     isPublic: obj.isPublic,
     createdAt: obj.createdAt,
     updatedAt: obj.updatedAt,

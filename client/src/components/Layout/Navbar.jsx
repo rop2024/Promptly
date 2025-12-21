@@ -115,7 +115,7 @@ const Navbar = ({ currentUser, onLogout }) => {
                       
                       {/* Quick Stats */}
                       {userStats && (
-                        <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div className="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-white/20">
                           <div className="text-center">
                             <div className="text-xl font-bold">{userStats.totalEntries || 0}</div>
                             <div className="text-xs text-green-100">Entries</div>
