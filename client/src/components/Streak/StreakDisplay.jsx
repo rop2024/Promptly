@@ -232,7 +232,9 @@ const StreakCalendar = () => {
   // Add all days of the month
   for (let day = 1; day <= totalDays; day++) {
     const date = new Date(currentYear, currentMonth, day);
-    const dateString = date.toISOString().split('T')[0];
+    const dateString = date.getFullYear() + '-' + 
+      String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+      String(date.getDate()).padStart(2, '0');
     currentWeek.push({ day, dateString });
     
     // If week is complete (Sunday to Saturday), start new week

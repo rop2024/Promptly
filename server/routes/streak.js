@@ -27,7 +27,18 @@ router.get('/', async (req, res, next) => {
       },
       {
         $project: {
-          date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }
+          date: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: {
+                $dateAdd: {
+                  startDate: "$createdAt",
+                  unit: "millisecond",
+                  amount: { $multiply: [new Date().getTimezoneOffset(), 60000] } // Convert minutes to milliseconds
+                }
+              }
+            }
+          }
         }
       },
       { $group: { _id: "$date" } },
@@ -92,7 +103,18 @@ router.get('/calendar', async (req, res, next) => {
       {
         $group: {
           _id: {
-            date: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }
+            date: {
+              $dateToString: {
+                format: "%Y-%m-%d",
+                date: {
+                  $dateAdd: {
+                    startDate: "$createdAt",
+                    unit: "millisecond",
+                    amount: { $multiply: [new Date().getTimezoneOffset(), 60000] }
+                  }
+                }
+              }
+            }
           },
           entryCount: { $sum: 1 },
           lastEntry: { $max: "$createdAt" }
