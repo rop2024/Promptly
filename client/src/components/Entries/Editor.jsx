@@ -8,14 +8,12 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
     title: '',
     content: '',
     isPublic: false,
-    timeSpent: 0,
     tags: []
   });
 
   const [errors, setErrors] = useState({});
   const [tagInput, setTagInput] = useState('');
   const [notification, setNotification] = useState({ show: false, message: '' });
-  const [timeSpent, setTimeSpent] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [startTime, setStartTime] = useState(null);
   const [distractionFree, setDistractionFree] = useState(false);
@@ -50,27 +48,10 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
         title: entry.title || '',
         content: entry.content || '',
         isPublic: entry.isPublic || false,
-        timeSpent: entry.timeSpent || 0,
         tags: entry.tags || []
       });
-      setTimeSpent(entry.timeSpent || 0);
     }
   }, [entry]);
-
-  // Time tracking effect
-  useEffect(() => {
-    let interval = null;
-    
-    if (isActive) {
-      interval = setInterval(() => {
-        setTimeSpent(prev => prev + 1);
-      }, 1000);
-    } else if (!isActive && timeSpent !== 0) {
-      clearInterval(interval);
-    }
-    
-    return () => clearInterval(interval);
-  }, [isActive]);
 
   // Start timer when user begins typing
   useEffect(() => {
@@ -413,9 +394,6 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
       return;
     }
     
-    // Stop timer
-    setIsActive(false);
-    
     // Validation
     const newErrors = {};
     if (!formData.content.trim()) newErrors.content = 'Content is required';
@@ -432,8 +410,7 @@ const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' 
     // If no title provided, generate one from content
     const finalFormData = {
       ...formData,
-      title: formData.title.trim() || formData.content.substring(0, 50).trim() + '...',
-      timeSpent
+      title: formData.title.trim() || formData.content.substring(0, 50).trim() + '...'
     };
 
     // Include time spent in submission
