@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { getRandomPrompts } from '../../config/stuckPrompts.js';
 import authService from '../../services/authService.js';
 import analyticsService from '../../services/analyticsService.js';
-import TimerWidget from '../Timer/TimerWidget.jsx';
 
 const Editor = ({ entry, onSubmit, onCancel, isLoading = false, mode = 'create' }) => {
   const [formData, setFormData] = useState({
