@@ -5,49 +5,70 @@ const dailyPrompts = {
     "If you could give your past self one piece of advice, what would it be?",
     "What moment from today are you most likely to remember in 5 years?",
     "How have your priorities changed over the last year?",
-    "What's a belief you held strongly that has evolved over time?"
+    "What's a belief you held strongly that has evolved over time?",
+    "What's a mistake you made that turned out to be a blessing in disguise?",
+    "What aspect of your personality are you most proud of?",
+    "How do you define happiness for yourself?"
   ],
   gratitude: [
     "What three things are you most grateful for today?",
     "Who made a positive impact on your day and how?",
     "What's something simple that brought you joy recently?",
     "What personal strength are you thankful for?",
-    "What comfort or convenience are you grateful to have?"
+    "What comfort or convenience are you grateful to have?",
+    "What's a skill or talent you possess that you're grateful for?",
+    "Who in your life brings out the best in you?",
+    "What opportunity are you thankful to have had?"
   ],
   creativity: [
     "If you had a completely free day with no responsibilities, how would you spend it?",
     "What's a creative idea you've been thinking about lately?",
     "Describe your ideal living space in detail.",
     "If you could master any skill instantly, what would it be and why?",
-    "What would you create if you knew you couldn't fail?"
+    "What would you create if you knew you couldn't fail?",
+    "If you could invent anything, what would it be?",
+    "What's a hobby you've always wanted to try?",
+    "Describe a dream project you'd love to work on."
   ],
   goals: [
     "What's one small step you can take today toward a bigger goal?",
     "What does success look like to you right now?",
     "What habit would you like to develop or break?",
     "Where would you like to be in 6 months, and what needs to happen to get there?",
-    "What's been holding you back from pursuing something you want?"
+    "What's been holding you back from pursuing something you want?",
+    "What would you attempt if you knew you couldn't fail?",
+    "What's a goal that excites you right now?",
+    "How do you measure progress in your life?"
   ],
   mindfulness: [
     "What emotions are present for you right now, without judgment?",
     "What sensations do you notice in your body at this moment?",
     "When did you feel most present and engaged today?",
     "What thought patterns have you noticed recently?",
-    "How can you be kinder to yourself today?"
+    "How can you be kinder to yourself today?",
+    "What are you looking forward to in the coming days?",
+    "When do you feel most at peace?",
+    "What boundaries do you need to set for yourself?"
   ],
   relationships: [
     "Who inspires you and why?",
     "What quality do you appreciate most in your closest relationships?",
     "How can you show appreciation to someone important in your life?",
     "What's a relationship that has shaped who you are today?",
-    "How do you nurture meaningful connections in your life?"
+    "How do you nurture meaningful connections in your life?",
+    "Who do you feel most comfortable being yourself around?",
+    "What role does forgiveness play in your relationships?",
+    "How do you express love to others?"
   ],
   growth: [
     "What's a challenge you're currently facing, and what is it teaching you?",
     "What would you do differently if you were more confident?",
     "What's an area of your life where you'd like to grow?",
     "What feedback have you received that could help you improve?",
-    "How do you handle setbacks or failures?"
+    "How do you handle setbacks or failures?",
+    "What's a fear you're ready to overcome?",
+    "What does personal growth mean to you?",
+    "How have you changed in the past year?"
   ]
 };
 
